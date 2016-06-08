@@ -225,6 +225,7 @@ namespace EDI_Utilities
                     {
                         finderSkips++;
                         finderLineOn = i;
+                        int position = match.Index;
                         String fieldName = parseFieldName(delimitedLine);
                         output += "Found : " + finderString + " [" + finderResultNumber + "]" + Environment.NewLine;
                         output += "FieldName: " + fieldName + Environment.NewLine;
@@ -241,6 +242,12 @@ namespace EDI_Utilities
                             Clipboard.SetText(fieldName);
                         }
 
+                        //IDOC INFO
+                        if (IdocLoaded)
+                        {
+                            output += LINE + Environment.NewLine;
+                            output += getIdocInfo(fieldName, position);
+                        }
 
                         return output;
                     }
@@ -624,10 +631,11 @@ namespace EDI_Utilities
         private idocSegment workingSegment;
         List<idocSegment> idocSegments = new List<idocSegment>();//holds all the loaded idoc segments
         private String workingSourceFormatText;
-
+        private bool IdocLoaded = false;
         public void processSourceFormat()
         {
             idocSegments.Clear();
+            allSegments.Clear();
             //read all lines in, and split into lines
             formatLines = seperateToLines(workingSourceFormatText);
             int i = 0;
@@ -671,6 +679,7 @@ namespace EDI_Utilities
             switch (key)
             {
                 case IDOC_BEGIN_SEGMENT_SECTION:
+                    IdocLoaded = false;
                     return;
                 case IDOC_END_IDOC:
                     return;
@@ -698,6 +707,8 @@ namespace EDI_Utilities
                     break;
                 case IDOC_END_SEGMENT:
                     idocSegments.Add(workingSegment);
+                    allSegments.Add(workingSegment.name, workingSegment);
+                    Console.WriteLine(workingSegment.name + "|" + workingSegment);
                     break;
 
                     //fields
@@ -716,21 +727,24 @@ namespace EDI_Utilities
                     workingField.type = value;
                     break;
                 case IDOC_LENGTH:
-                    workingField.length = value;
+                    workingField.length = Int32.Parse(value);
                     break;
                 case IDOC_FIELD_POS:
-                    workingField.fieldPos = value;
+                    workingField.fieldPos = Int32.Parse(value);
                     break;
                 case IDOC_CHARACTER_FIRST:
-                    workingField.charFirst = value;
+                    workingField.charFirst = Int32.Parse(value);
                     break;
                 case IDOC_CHARACTER_LAST:
-                    workingField.charLast = value;
+                    workingField.charLast = Int32.Parse(value);
                     workingSegment.fields.Add(workingField);
                     break;
                 case IDOC_END_FIELDS:
                     break;
-                
+
+                case IDOC_END_SEGMENT_SECTION:
+                    IdocLoaded = true;
+                    break;
             }
 
 
@@ -776,6 +790,33 @@ namespace EDI_Utilities
                 // this adds all the next lines
             }
             return lineList;
+        }
+
+        //preprocess, get each line's segment name?
+        Dictionary<String, idocSegment> allSegments = new Dictionary<string, idocSegment>();
+        public static List<List<String>> toTrueDelimitedIdoc(String idocIn)
+        {
+            //TODO add this.
+            return null;
+        }
+
+        public String getIdocInfo(String segName,int position)
+        {
+            String output = "";
+            try
+            {
+                idocSegment seg = allSegments[segName];
+
+                output += seg.ToString() + Environment.NewLine;
+                //find field in segment
+                idocField field = seg.getFieldInPosition(position);
+                output += field;
+            } catch (Exception e)
+            {
+                Console.WriteLine("ERROR finding: " + segName);
+                output += "(no IDOC information found)" + Environment.NewLine;
+            }
+            return output;
         }
 
     }

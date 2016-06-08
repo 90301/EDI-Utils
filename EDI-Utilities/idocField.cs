@@ -11,9 +11,9 @@ namespace EDI_Utilities
         public String name { get; set; }
         public String text { get; set; }
         public String type { get; set; }
-        public String fieldPos { get; set; }
-        public String length { get; set; }
-        public String charFirst { get; set; }
-        public String charLast { get; set; }
+        public int fieldPos { get; set; }
+        public int length { get; set; }
+        public int charFirst { get; set; }
+        public int charLast { get; set; }
     }
 }

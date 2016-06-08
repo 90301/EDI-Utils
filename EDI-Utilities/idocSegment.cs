@@ -16,5 +16,17 @@ namespace EDI_Utilities
         //the string is the field name
         public List<idocField> fields = new List<idocField>();
 
+        public idocField getFieldInPosition(int position)
+        {
+            foreach (idocField field in fields)
+            {
+                if (field.charFirst <= position && field.charLast <= position)
+                {
+                    return field;
+                }
+            }
+
+            return null;
+        }
     }
 }

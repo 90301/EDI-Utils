@@ -56,6 +56,7 @@
                 <TextBox x:Name="sffConsole" Margin="10,37,10,21" TextWrapping="Wrap" Text="Super Field Finder Console" AcceptsReturn="True"/>
                 <CheckBox x:Name="sffAutoClipboardCheckBox" Content="Auto Clipboard Field Name" HorizontalAlignment="Left" Margin="10,0,0,0" Height="16" VerticalAlignment="Bottom"/>
                 <Button x:Name="sffFindNextInstanceBtn" Content="Find" Margin="0,8,75,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="57" Click="sffFindNextInstanceClick"/>
+                <CheckBox x:Name="sffSmartModeCheckBox" Content="smart mode (pre-alpha)" HorizontalAlignment="Left" Margin="193,0,0,0" Height="16" VerticalAlignment="Bottom"/>
 
 
             </Grid>
