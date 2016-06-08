@@ -24,7 +24,7 @@
             <Grid Margin="10,5,9,10">
                 <TextBox x:Name="findTextbox" HorizontalAlignment="Left" Height="23" Margin="52,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="findTextbox_TextChanged"/>
                 <Label x:Name="label1" Content="Find:" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top"/>
-                <Button x:Name="button1" Content="Next" HorizontalAlignment="Left" Margin="177,10,0,0" VerticalAlignment="Top" Width="40" Click="findNext"/>
+                <Button x:Name="button1" Content="Next" HorizontalAlignment="Left" Margin="177,10,0,0" VerticalAlignment="Top" Width="40" Click="findNextClick"/>
                 <Label x:Name="label2" Content="Found: XXXX" HorizontalAlignment="Left" Margin="222,7,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="fieldFinderResultsTextbox" Margin="10,39,229,10" TextWrapping="Wrap" Text="Results Conosle" AcceptsReturn="True" AcceptsTab="True"/>
             </Grid>
