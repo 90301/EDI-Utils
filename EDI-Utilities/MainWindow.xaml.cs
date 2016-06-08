@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -136,7 +137,13 @@ namespace EDI_Utilities
         {
             sffCodeSelected();
         }
-
+        private void sourceFormatProcessClick(object sender, RoutedEventArgs e)
+        {
+            Thread process = new Thread(new ThreadStart(processSourceFormat));
+            //processSourceFormat();
+            this.workingSourceFormatText = formatTextBox.Text;
+            process.Start();
+        }
 
         /// <summary>
         /// Returns how many lines BEFORE the current line
@@ -583,10 +590,193 @@ namespace EDI_Utilities
 
         }
 
+        private List<String> formatLines;
+        //IDOC constants
+        //starting
+        public const String IDOC_BEGIN_SEGMENT_SECTION = "BEGIN_SEGMENT_SECTION";//starts a document [ignore?]
+        public const String IDOC_BEGIN_SEGMENT = "BEGIN_SEGMENT";//value is the field name
+        public const String IDOC_BEGIN_IDOC = "BEGIN_IDOC";
+        public const String IDOC_BEGIN_FIELDS = "BEGIN_FIELDS";
+        //public const String IDOC_ = "";
+
+        //SEGMENT
+        public const String IDOC_SEG_STATUS = "STATUS";
+        public const String IDOC_SEG_TYPE = "TYPE";
+        public const String IDOC_SEG_LEVEL = "LEVEL";
+        public const String IDOC_SEG_LOOPMIN = "LOOPMIN";
+        public const String IDOC_SEG_LOOPMAX = "LOOPMAX";
+        //FIELDS
+        public const String IDOC_NAME = "NAME";
+        public const String IDOC_TEXT = "TEXT";
+        public const String IDOC_TYPE = "TYPE";
+        public const String IDOC_FIELD_POS = "FIELD_POS";
+        public const String IDOC_LENGTH = "LENGTH";
+        public const String IDOC_CHARACTER_FIRST = "CHARACTER_FIRST";
+        public const String IDOC_CHARACTER_LAST = "CHARACTER_LAST";
+        //ending
+        public const String IDOC_END_SEGMENT = "END_SEGMENT";
+        public const String IDOC_END_FIELDS = "END_FIELDS";
+        public const String IDOC_END_IDOC = "END_IDOC";
+        public const String IDOC_END_SEGMENT_SECTION = "END_SEGMENT_SECTION";
+        private static readonly int IDOC_FIELD_LENGTH = 20;
+        public String idocName;
+        private idocField workingField;
+        private idocSegment workingSegment;
+        List<idocSegment> idocSegments = new List<idocSegment>();//holds all the loaded idoc segments
+        private String workingSourceFormatText;
+
+        public void processSourceFormat()
+        {
+            idocSegments.Clear();
+            //read all lines in, and split into lines
+            formatLines = seperateToLines(workingSourceFormatText);
+            int i = 0;
+            //begin processing
+            foreach (String line in formatLines)
+            {
+                i++;
+                processIdocFormatLine(line);
+                
+            }
 
 
 
 
-        //todo: make this copy the fieldname to clipboard if that checkbox is checked
+        }
+
+        private void processIdocFormatLine(string line)
+        {
+            //the method can simply return if the format is skippable
+            //divide line up into fields (we are only expecting two)
+            List<String> delimited = toFormatDelimited(line);
+            //first value is the key, 2nd is the value
+            if (delimited.Count < 1)
+            {
+                //too few fields
+                return;
+            }
+
+            String key = delimited[0];
+
+            String value;
+            if (delimited.Count >= 2)
+            {
+                value = delimited[1];
+            }
+            else
+            {
+                value = "";
+            }
+            //Console.WriteLine("key: " + key + " Value: " + value);
+            switch (key)
+            {
+                case IDOC_BEGIN_SEGMENT_SECTION:
+                    return;
+                case IDOC_END_IDOC:
+                    return;
+                case IDOC_BEGIN_IDOC:
+                    idocName = value;
+                    break;
+                case IDOC_BEGIN_SEGMENT:
+                    //create a new statement
+                    idocSegment seg = new idocSegment();
+                    //idocSegments.Add(seg);
+                    seg.name = value;
+                    workingSegment = seg;
+                    break;
+                case IDOC_SEG_LEVEL:
+                    workingSegment.level = value;
+                    break;
+                case IDOC_SEG_STATUS:
+                    workingSegment.status = value;
+                    break;
+                case IDOC_SEG_LOOPMIN:
+                    workingSegment.loopMin = value;
+                    break;
+                case IDOC_SEG_LOOPMAX:
+                    workingSegment.loopMax = value;
+                    break;
+                case IDOC_END_SEGMENT:
+                    idocSegments.Add(workingSegment);
+                    break;
+
+                    //fields
+                case IDOC_BEGIN_FIELDS:
+                    
+                    break;
+                case IDOC_NAME:
+                    idocField field = new idocField();
+                    workingField = field;
+                    workingField.name = value;
+                    break;
+                case IDOC_TEXT:
+                    workingField.text = value;
+                    break;
+                case IDOC_TYPE:
+                    workingField.type = value;
+                    break;
+                case IDOC_LENGTH:
+                    workingField.length = value;
+                    break;
+                case IDOC_FIELD_POS:
+                    workingField.fieldPos = value;
+                    break;
+                case IDOC_CHARACTER_FIRST:
+                    workingField.charFirst = value;
+                    break;
+                case IDOC_CHARACTER_LAST:
+                    workingField.charLast = value;
+                    workingSegment.fields.Add(workingField);
+                    break;
+                case IDOC_END_FIELDS:
+                    break;
+                
+            }
+
+
+            //CASE based on text matching
+        }
+
+        public static List<String> toFormatDelimited(String line)
+        {
+            //trim leading and following spaces
+            line = line.Trim();
+            List<String> fields = new List<string>();
+            if (line.Contains(IDOC_BEGIN_FIELDS) 
+                || line.Contains(IDOC_BEGIN_SEGMENT_SECTION)
+                || line.Contains(IDOC_END_FIELDS)
+                || line.Contains(IDOC_END_IDOC)
+                || line.Contains(IDOC_END_SEGMENT_SECTION)
+                || line.Contains(IDOC_END_SEGMENT)
+                || line.Length < IDOC_FIELD_LENGTH)
+            {
+                fields.Add(line);
+            } else {
+                
+                String key = line.Substring(0, IDOC_FIELD_LENGTH).Trim();
+                String value = line.Substring(IDOC_FIELD_LENGTH, line.Length-IDOC_FIELD_LENGTH).Trim();
+                fields.Add(key);
+                fields.Add(value);
+            }
+            return fields;
+
+        }
+
+        public static List<String> seperateToLines(String multiLineText)
+        {
+            List<String> lineList = new List<string>();
+            String[] lines = multiLineText.Split(new string[] { Environment.NewLine, "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (String line in lines)
+            {
+                if (line != "")
+                {
+                    lineList.Add(line);
+                }
+                // this adds all the next lines
+            }
+            return lineList;
+        }
+
     }
 }
