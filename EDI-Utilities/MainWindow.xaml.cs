@@ -393,11 +393,11 @@ namespace EDI_Utilities
             output += usefulExpectedFields[sffCodeIndex][0] + " " + trueIndex + Environment.NewLine;
 
 
-
+            /*
             output += LINE + Environment.NewLine;
             output += "sff Code Index: " + sffCodeIndex + Environment.NewLine;
             output += "sff Item Index: " + sffItemIndex + Environment.NewLine;
-
+            */
             sffConsole.Text = output;
 
             //ADD way to match first N characters!
@@ -407,7 +407,7 @@ namespace EDI_Utilities
         /// Gets the next item (or move to the next "code") and performs a
         /// search.
         /// No functionality is currently present at the end of a file,
-        /// so this may crash.
+        /// so this will crash.
         /// </summary>
         public void sffNext()
         {
@@ -420,6 +420,10 @@ namespace EDI_Utilities
 
                 //go to the next code
                 sffCodeIndex++;
+                if (sffCodeIndex >= usefulExpectedFields.Count)
+                {
+                    sffCodeIndex = 0;
+                }
                 sffItemIndex = 1;//skip the first field as it's an EDI code
 
                 sffSearchForCodeComboBox.SelectedIndex = sffCodeIndex;
@@ -810,7 +814,13 @@ namespace EDI_Utilities
                 output += seg.ToString() + Environment.NewLine;
                 //find field in segment
                 idocField field = seg.getFieldInPosition(position);
-                output += field;
+                if (field != null)
+                {
+                    output += field;
+                } else
+                {
+                    output += "(no field found)" + Environment.NewLine;
+                }
             } catch (Exception e)
             {
                 Console.WriteLine("ERROR finding: " + segName);

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EDI_Utilities"
         mc:Ignorable="d"
-        Title="EDI-Utilities [by Josh Benton]" Height="500" Width="680">
+        Title="EDI-Utilities [by Josh Benton]" Height="700" Width="680">
     <TabControl x:Name="tabControl" Margin="10,10,14,7" RenderTransformOrigin="0.496,0.513" SelectionChanged="tabControl_SelectionChanged">
         <TabItem Header="Source (flat)">
             <Grid>

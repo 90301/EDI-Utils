@@ -15,5 +15,18 @@ namespace EDI_Utilities
         public int length { get; set; }
         public int charFirst { get; set; }
         public int charLast { get; set; }
+
+        public override string ToString()
+        {
+            String output = "";
+            output += "NAME: " + name + Environment.NewLine;
+            output += "TEXT: " + text + Environment.NewLine;
+            output += "TYPE: " + type + Environment.NewLine;
+            output += "FIELD_POS: " + fieldPos + Environment.NewLine;
+            output += "LENGTH: " + length + Environment.NewLine;
+            output += "CHAR_FIRST: " + charFirst + Environment.NewLine;
+            output += "CHAR_LAST: " + charLast + Environment.NewLine;
+            return output;
+        }
     }
 }

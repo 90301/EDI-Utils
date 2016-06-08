@@ -28,5 +28,17 @@ namespace EDI_Utilities
 
             return null;
         }
+
+        public override String ToString()
+        {
+            String output = "-FIELD-" + Environment.NewLine;
+            output += "NAME: " + name + Environment.NewLine;
+            output += "LEVEL: " + level + Environment.NewLine;
+            output += "STATUS: " + status + Environment.NewLine;
+            output += "LOOP_MIN: " + loopMin + Environment.NewLine;
+            output += "LOOP_MAX: " + loopMax + Environment.NewLine;
+            output += "KNOWN FIELDS: " + fields.Count + Environment.NewLine;
+            return output;
+        }
     }
 }
