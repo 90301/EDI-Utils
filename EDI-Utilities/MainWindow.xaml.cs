@@ -78,8 +78,7 @@ namespace EDI_Utilities
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        /// <returns>The output text</returns>
-        private String findNextClick(object sender, RoutedEventArgs e)
+        private void findNextClick(object sender, RoutedEventArgs e)
         {
             //perform a basic search for the string
             String findThis = findTextbox.Text;
@@ -92,8 +91,6 @@ namespace EDI_Utilities
             //find the field name
             //find the line number
             //find the distance from the line.
-
-            return output;
 
         }
         private void button_Click(object sender, RoutedEventArgs e)

@@ -5,28 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EDI_Utilities"
         mc:Ignorable="d"
-        Title="EDI-Utilities [by Josh Benton]" Height="350" Width="520">
+        Title="EDI-Utilities [by Josh Benton]" Height="500" Width="680">
     <TabControl x:Name="tabControl" Margin="10,10,14,7" RenderTransformOrigin="0.496,0.513" SelectionChanged="tabControl_SelectionChanged">
         <TabItem Header="Source (flat)">
-            <Grid Background="#FFE5E5E5">
+            <Grid>
                 <TextBox x:Name="sourceTextbox" Margin="10,10,10,40" Text="" MaxLength="2147483647" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" AutoWordSelection="False" AcceptsReturn="True"/>
                 <Button x:Name="button" Content="Convert to delimited" Margin="0,0,10,10" Click="button_Click" HorizontalAlignment="Right" Width="125" Height="23" VerticalAlignment="Bottom"/>
                 <TextBox x:Name="delimiterTextbox" HorizontalAlignment="Left" Margin="80,0,0,7" TextWrapping="Wrap" Text="|" Width="30" MaxLength="5" MaxLines="1" Height="23" VerticalAlignment="Bottom"/>
                 <Label x:Name="label" Content="Delimiter:" HorizontalAlignment="Left" Margin="10,0,0,7" Height="26" VerticalAlignment="Bottom"/>
             </Grid>
         </TabItem>
-        <TabItem Header="Delimited">
-            <Grid Background="#FFE5E5E5">
-                <TextBox x:Name="delimitedTextbox" Margin="10" Text="TextBox" AcceptsReturn="True" AcceptsTab="True" AutoWordSelection="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+        <TabItem Header="Source Format">
+            <Grid>
+                <TextBox x:Name="formatTextBox" Margin="10,10,10,40" TextWrapping="Wrap"/>
+                <Button x:Name="processFormat" Content="Process Format" Margin="0,0,10,10" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120"/>
             </Grid>
         </TabItem>
-        <TabItem x:Name="field_finder" Header="field finder">
-            <Grid Margin="10,5,9,10">
-                <TextBox x:Name="findTextbox" HorizontalAlignment="Left" Height="23" Margin="52,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="findTextbox_TextChanged"/>
-                <Label x:Name="label1" Content="Find:" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top"/>
-                <Button x:Name="button1" Content="Next" HorizontalAlignment="Left" Margin="177,10,0,0" VerticalAlignment="Top" Width="40" Click="findNextClick"/>
-                <Label x:Name="label2" Content="Found: XXXX" HorizontalAlignment="Left" Margin="222,7,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="fieldFinderResultsTextbox" Margin="10,39,229,10" TextWrapping="Wrap" Text="Results Conosle" AcceptsReturn="True" AcceptsTab="True"/>
+        <TabItem Header="Delimited">
+            <Grid>
+                <TextBox x:Name="delimitedTextbox" Margin="10" Text="TextBox" AcceptsReturn="True" AcceptsTab="True" AutoWordSelection="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
             </Grid>
         </TabItem>
         <TabItem HeaderStringFormat="" Header="Expected">
@@ -37,6 +34,15 @@
                 <Label x:Name="label3" Content="Delimiter:" HorizontalAlignment="Left" Margin="10,0,0,8" Height="26" VerticalAlignment="Bottom"/>
                 <Label x:Name="label4" Content="End of Line:" HorizontalAlignment="Left" Margin="119,0,0,9" Height="26" VerticalAlignment="Bottom"/>
                 <TextBox x:Name="expectedEOLDelimiterTextBox" HorizontalAlignment="Left" Margin="195,0,0,10" TextWrapping="Wrap" Text="~" Width="34" Height="23" VerticalAlignment="Bottom"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="field_finder" Header="field finder">
+            <Grid Margin="10,5,9,10">
+                <TextBox x:Name="findTextbox" HorizontalAlignment="Left" Height="23" Margin="52,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                <Label x:Name="label1" Content="Find:" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="button1" Content="Next" HorizontalAlignment="Left" Margin="177,10,0,0" VerticalAlignment="Top" Width="40" Click="findNextClick"/>
+                <Label x:Name="label2" Content="Found: XXXX" HorizontalAlignment="Left" Margin="222,7,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="fieldFinderResultsTextbox" Margin="10,39,229,10" TextWrapping="Wrap" Text="Results Conosle" AcceptsReturn="True" AcceptsTab="True"/>
             </Grid>
         </TabItem>
         <TabItem x:Name="Super_Field_Finder_Tab" Header="Super Field Finder">
