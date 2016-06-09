@@ -18,7 +18,7 @@ namespace EDI_Utilities
 
         public override string ToString()
         {
-            String output = "";
+            String output = "-FIELD-" + Environment.NewLine;
             output += "NAME: " + name + Environment.NewLine;
             output += "TEXT: " + text + Environment.NewLine;
             output += "TYPE: " + type + Environment.NewLine;

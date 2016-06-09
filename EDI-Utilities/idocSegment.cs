@@ -31,7 +31,7 @@ namespace EDI_Utilities
 
         public override String ToString()
         {
-            String output = "-FIELD-" + Environment.NewLine;
+            String output = "-SEGMENT-" + Environment.NewLine;
             output += "NAME: " + name + Environment.NewLine;
             output += "LEVEL: " + level + Environment.NewLine;
             output += "STATUS: " + status + Environment.NewLine;

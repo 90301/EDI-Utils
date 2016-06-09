@@ -261,10 +261,10 @@ namespace EDI_Utilities
                 finderSkips = 0;
             }
             resetFinder();
-            output = "No further matches found." + Environment.NewLine;
+            output = NO_RESULTS_FOUND + Environment.NewLine;
             return output;
         }
-
+        public const string NO_RESULTS_FOUND = "No further matches found.";
         public void resetFinder()
         {
             finderString = "";
@@ -384,9 +384,25 @@ namespace EDI_Utilities
             }
             //get text to find
             String searchTerm = usefulExpectedFields[sffCodeIndex][sffItemIndex];
-            String output = findString(searchTerm);
+            String output = "searching";
+            output = findString(searchTerm);
+            //keep searching until a smart result is found
+            //(smart result = a known idoc field is found)
+            if (sffSmartModeCheckBox.IsChecked.Value) {
+                int otherResultsFound = 0;
+                while (!idocFieldFound && !output.Contains(NO_RESULTS_FOUND))
+                {
+                    otherResultsFound++;
+                    output = findString(searchTerm);
 
-            output += Environment.NewLine;
+                }
+                //output how many results the smart filter skipped
+                if (otherResultsFound >=1)
+                {
+                    output += "Skipped results: " + otherResultsFound + Environment.NewLine;
+                }
+            }
+            //output += Environment.NewLine;
             output += LINE + Environment.NewLine;
 
             int trueIndex = sffTrueIndexFind(searchTerm);
@@ -636,6 +652,8 @@ namespace EDI_Utilities
         List<idocSegment> idocSegments = new List<idocSegment>();//holds all the loaded idoc segments
         private String workingSourceFormatText;
         private bool IdocLoaded = false;
+        private bool idocFieldFound = false;
+
         public void processSourceFormat()
         {
             idocSegments.Clear();
@@ -806,6 +824,7 @@ namespace EDI_Utilities
 
         public String getIdocInfo(String segName,int position)
         {
+            idocFieldFound = false;
             String output = "";
             try
             {
@@ -816,6 +835,7 @@ namespace EDI_Utilities
                 idocField field = seg.getFieldInPosition(position);
                 if (field != null)
                 {
+                    idocFieldFound = true;
                     output += field;
                 } else
                 {
