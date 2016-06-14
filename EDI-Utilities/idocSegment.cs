@@ -20,7 +20,7 @@ namespace EDI_Utilities
         {
             foreach (idocField field in fields)
             {
-                if (field.charFirst <= position && field.charLast <= position)
+                if (field.charFirst <= (position+1) && field.charLast >= (position+1))
                 {
                     return field;
                 }
