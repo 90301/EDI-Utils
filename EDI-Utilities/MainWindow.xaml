@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EDI_Utilities"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="EDI-Utilities [by Josh Benton]" Height="700" Width="680">
     <TabControl x:Name="tabControl" Margin="10,10,14,7" RenderTransformOrigin="0.496,0.513" SelectionChanged="tabControl_SelectionChanged">
@@ -53,11 +54,15 @@
                        " HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="75"/>
                 <Button x:Name="sffNextButton" Content="Next" Margin="0,8,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="60" Click="sffNextClick"/>
                 <ComboBox x:Name="sffSearchForItemComboBox" Margin="155,8,137,0" VerticalAlignment="Top" SelectionChanged="sffItemSelected"/>
-                <TextBox x:Name="sffConsole" Margin="10,37,10,21" TextWrapping="Wrap" Text="Super Field Finder Console" AcceptsReturn="True"/>
+                <TextBox x:Name="sffConsole" Margin="10,65,10,21" TextWrapping="Wrap" Text="Super Field Finder Console" AcceptsReturn="True"/>
                 <CheckBox x:Name="sffAutoClipboardCheckBox" Content="Auto Clipboard Field Name" HorizontalAlignment="Left" Margin="10,0,0,0" Height="16" VerticalAlignment="Bottom"/>
                 <Button x:Name="sffFindNextInstanceBtn" Content="Find" Margin="0,8,75,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="57" Click="sffFindNextInstanceClick"/>
-                <CheckBox x:Name="sffSmartModeCheckBox" Content="smart mode (pre-alpha)" HorizontalAlignment="Left" Margin="193,0,0,0" Height="16" VerticalAlignment="Bottom"/>
-
+                <CheckBox x:Name="sffSmartModeCheckBox" Content="Smart Mode" HorizontalAlignment="Left" Margin="193,0,0,0" Height="16" VerticalAlignment="Bottom" Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" ToolTip="Skips any result that does not have idoc information"/>
+                <xctk:IntegerUpDown x:Name="fallbackFirstNCharsField" Height="23" Margin="180,37,398,559" AllowTextInput="False" Watermark="Chars" Value="5" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+                <Label x:Name="label6" Content="Alt Search   First characters:" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top"/>
+                <xctk:IntegerUpDown x:Name="fallbackLastNCharsField" Height="23" Margin="347,37,231,559" AllowTextInput="False" Watermark="Chars" Value="5" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+                <Label x:Name="label7" Content="Last Characters:" HorizontalAlignment="Left" Margin="245,35,0,0" VerticalAlignment="Top" Foreground="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}"/>
+                <CheckBox x:Name="fallbackSearchCheckbox" Content="Fallback Search" HorizontalAlignment="Left" Margin="298,603,0,0" VerticalAlignment="Top" IsChecked="{Binding fallbackSearchEnabled, Mode=TwoWay}"/>
 
             </Grid>
         </TabItem>

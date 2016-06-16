@@ -55,11 +55,17 @@ namespace EDI_Utilities
         //constants
         public const string LINE = "-------------------------";
 
+        //data bound elements
+        public bool fallbackSearchEnabled { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
+
         }
+
+        
 
         /*
          *  ________________________________________________
@@ -408,6 +414,7 @@ namespace EDI_Utilities
             int trueIndex = sffTrueIndexFind(searchTerm);
             output += usefulExpectedFields[sffCodeIndex][0] + " " + trueIndex + Environment.NewLine;
 
+            output += "Fallback search enabled: " + fallbackSearchEnabled + Environment.NewLine;
 
             /*
             output += LINE + Environment.NewLine;
