@@ -8,10 +8,10 @@
         mc:Ignorable="d"
         Title="EDI-Utilities [by Josh Benton]" Height="700" Width="680">
     <TabControl x:Name="tabControl" Margin="10,10,14,7" RenderTransformOrigin="0.496,0.513" SelectionChanged="tabControl_SelectionChanged">
-        <TabItem Header="Source (flat)">
+        <TabItem Header="Source (Idoc)">
             <Grid>
                 <TextBox x:Name="sourceTextbox" Margin="10,10,10,40" Text="" MaxLength="2147483647" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" AutoWordSelection="False" AcceptsReturn="True"/>
-                <Button x:Name="button" Content="Convert to delimited" Margin="0,0,10,10" Click="button_Click" HorizontalAlignment="Right" Width="125" Height="23" VerticalAlignment="Bottom"/>
+                <Button x:Name="button" Content="Convert to delimited" Margin="0,0,10,10" Click="processIdocButton_Click" HorizontalAlignment="Right" Width="125" Height="23" VerticalAlignment="Bottom"/>
                 <TextBox x:Name="delimiterTextbox" HorizontalAlignment="Left" Margin="80,0,0,7" TextWrapping="Wrap" Text="|" Width="30" MaxLength="5" MaxLines="1" Height="23" VerticalAlignment="Bottom"/>
                 <Label x:Name="label" Content="Delimiter:" HorizontalAlignment="Left" Margin="10,0,0,7" Height="26" VerticalAlignment="Bottom"/>
             </Grid>
@@ -28,7 +28,7 @@
                 <TextBox x:Name="delimitedTextbox" Margin="10" Text="TextBox" AcceptsReturn="True" AcceptsTab="True" AutoWordSelection="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
             </Grid>
         </TabItem>
-        <TabItem HeaderStringFormat="" Header="Expected">
+        <TabItem HeaderStringFormat="" Header="Expected (X12)">
             <Grid Margin="10,2,11,6">
                 <TextBox x:Name="expectedTextBox" Margin="10,10,10,38" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                 <Button x:Name="expectedProcessBtn" Content="Process" Margin="0,0,10,10" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="processExpected"/>
@@ -63,6 +63,40 @@
                 <xctk:IntegerUpDown x:Name="fallbackLastNCharsField" Height="23" Margin="347,37,231,559" AllowTextInput="False" Watermark="Chars" Value="5" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
                 <Label x:Name="label7" Content="Last Characters:" HorizontalAlignment="Left" Margin="245,35,0,0" VerticalAlignment="Top" Foreground="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}"/>
                 <CheckBox x:Name="fallbackSearchCheckbox" Content="Fallback Search" HorizontalAlignment="Left" Margin="298,603,0,0" VerticalAlignment="Top" IsChecked="{Binding fallbackSearchEnabled, Mode=TwoWay}"/>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="Idoc Explorer">
+            <Grid>
+                <ComboBox x:Name="IdocExplorerSegmentComboBox" Margin="80,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="190" IsReadOnly="True"/>
+                <ComboBox x:Name="IdocExplorerFieldComboBox" Margin="323,10,115,0" VerticalAlignment="Top" IsReadOnly="True"/>
+                <Label x:Name="label8" Content="Segment: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label9" Content="Field: " Margin="275,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="43"/>
+                <TextBox x:Name="IdocExplorerConsole" Margin="10,41,10,10" TextWrapping="Wrap" Text="TextBox" AcceptsReturn="True"/>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="Conversion CSV">
+            <Grid></Grid>
+        </TabItem>
+        <TabItem Header="File Loader">
+            <Grid>
+                <Label x:Name="label10" Content="IDOC: " HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label10_Copy" Content="Idoc Format: " HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label10_Copy1" Content="X12 Format:" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label10_Copy2" Content="Conversion CSV:" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label10_Copy3" Content="Preference file:" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top"/>
+                <GridSplitter x:Name="gridSplitter" HorizontalAlignment="Left" Height="100" Margin="110,150,0,0" VerticalAlignment="Top" Width="5"/>
+                <Button x:Name="uploadIdocButton" Content="Upload" HorizontalAlignment="Left" Margin="126,41,0,0" VerticalAlignment="Top" Width="75" Click="uploadIdocClick"/>
+                <Label x:Name="loaderIdocStatusLabel" Content="idoc status" HorizontalAlignment="Left" Margin="206,41,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="uploadIdocStatusButton" Content="Upload" HorizontalAlignment="Left" Margin="126,72,0,0" VerticalAlignment="Top" Width="75" Click="uploadIdocFormatClick"/>
+                <Label x:Name="loaderIdocFormatStatusLabel" Content="idoc format status" HorizontalAlignment="Left" Margin="206,72,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="uploadX12Button" Content="Upload" HorizontalAlignment="Left" Margin="126,103,0,0" VerticalAlignment="Top" Width="75" Click="uploadX12ButtonClick"/>
+                <Label x:Name="loaderX12StatusLabel" Content="x12 status" HorizontalAlignment="Left" Margin="206,103,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="uploadConversionButton" Content="Upload" HorizontalAlignment="Left" Margin="126,134,0,0" VerticalAlignment="Top" Width="75"/>
+                <Label x:Name="loaderConversionStatusLabel" Content="Conversion status" HorizontalAlignment="Left" Margin="206,134,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="uploadPrefButton" Content="Upload" HorizontalAlignment="Left" Margin="126,165,0,0" VerticalAlignment="Top" Width="75"/>
+                <Label x:Name="loaderPrefStatusLabel" Content="Preference status" HorizontalAlignment="Left" Margin="206,165,0,0" VerticalAlignment="Top"/>
 
             </Grid>
         </TabItem>
