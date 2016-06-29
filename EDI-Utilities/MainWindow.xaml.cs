@@ -967,6 +967,9 @@ namespace EDI_Utilities
         /// </summary>
         private void processConversion()
         {
+            coList.Clear();
+            coDict.Clear();
+            conversionObjects.Clear();
             //convert to lines
             String[] lines = conversionSourceTextBox.Text.Split(NEW_LINE_SPLIT,StringSplitOptions.RemoveEmptyEntries);
 
@@ -1004,7 +1007,8 @@ namespace EDI_Utilities
                         consoleOut += findConversionObjectInfo(co);
                         consoleOut += LINE + Environment.NewLine;
                         conversionObjects.Add(co);
-                        //add to x12 combo box
+                        coDict[co.x12]= co;
+                        coList[co.x12]= co;
                     }
                     else
                     {
@@ -1023,9 +1027,19 @@ namespace EDI_Utilities
             }
 
             conversionConsoleTextBox.Text = consoleOut;
-
+            //add to x12 combo box
+            poplateExplorerComboBox();
         }
-
+        SortedList<String, ConversionObject> coList = new SortedList<string, ConversionObject>();
+        Dictionary<String, ConversionObject> coDict = new Dictionary<string, ConversionObject>();
+        void poplateExplorerComboBox()
+        {
+            explorerX12ComboBox.Items.Clear();
+            foreach (String coX12 in coList.Keys)
+            {
+                explorerX12ComboBox.Items.Add(coX12);
+            }
+        }
         String findConversionObjectInfo(ConversionObject co)
         {
             String s = "";
