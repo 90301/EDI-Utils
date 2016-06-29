@@ -66,7 +66,7 @@ namespace EDI_Utilities
         public int conversionX12Col { get; set; }
         public int conversionSkipFirstX { get; set; }
         public bool conversionHoldSegValue { get; set; }
-
+        public bool conversionIntenseSearch { get; set;  }
 
         public MainWindow()
         {
@@ -673,9 +673,9 @@ namespace EDI_Utilities
         public const String IDOC_END_SEGMENT_SECTION = "END_SEGMENT_SECTION";
         private static readonly int IDOC_FIELD_LENGTH = 20;
         public String idocName;
-        private idocField workingField;
-        private idocSegment workingSegment;
-        List<idocSegment> idocSegments = new List<idocSegment>();//holds all the loaded idoc segments
+        private IdocField workingField;
+        private IdocSegment workingSegment;
+        List<IdocSegment> idocSegments = new List<IdocSegment>();//holds all the loaded idoc segments
         private String workingSourceFormatText;
         private bool IdocLoaded = false;
         private bool idocFieldFound = false;
@@ -726,7 +726,7 @@ namespace EDI_Utilities
             Console.WriteLine("key: " + key + " Value: " + value);
             if (workingSegment == null)
             {
-                workingSegment = new idocSegment();
+                workingSegment = new IdocSegment();
                 workingSegment.name = "no segment name dump";
             }
 
@@ -745,7 +745,7 @@ namespace EDI_Utilities
                     break;
                 case IDOC_BEGIN_SEGMENT:
                     //create a new statement
-                    idocSegment seg = new idocSegment();
+                    IdocSegment seg = new IdocSegment();
                     //idocSegments.Add(seg);
                     seg.name = value;
                     workingSegment = seg;
@@ -773,7 +773,7 @@ namespace EDI_Utilities
                     
                     break;
                 case IDOC_NAME:
-                    idocField field = new idocField();
+                    IdocField field = new IdocField();
                     workingField = field;
                     workingField.name = value;
                     break;
@@ -850,7 +850,7 @@ namespace EDI_Utilities
         }
 
         //preprocess, get each line's segment name?
-        Dictionary<String, idocSegment> allSegments = new Dictionary<string, idocSegment>();
+        Dictionary<String, IdocSegment> allSegments = new Dictionary<string, IdocSegment>();
         public readonly String[] NEW_LINE_SPLIT = new string[] { Environment.NewLine, "\r\n", "\n" };
 
         public static List<List<String>> toTrueDelimitedIdoc(String idocIn)
@@ -865,11 +865,11 @@ namespace EDI_Utilities
             String output = "";
             try
             {
-                idocSegment seg = allSegments[segName];
+                IdocSegment seg = allSegments[segName];
 
                 output += seg.ToString() + Environment.NewLine;
                 //find field in segment
-                idocField field = seg.getFieldInPosition(position);
+                IdocField field = seg.getFieldInPosition(position);
                 if (field != null)
                 {
                     idocFieldFound = true;
@@ -958,6 +958,8 @@ namespace EDI_Utilities
             processConversion();
         }
         List<ConversionObject> conversionObjects = new List<ConversionObject>();
+        private readonly int SEARCH_STOP = 4;
+
         /// <summary>
         /// Go through the csv, looking for essential fields
         /// populate objects based on the lines
@@ -999,9 +1001,10 @@ namespace EDI_Utilities
                         co.idocSeg = idocSeg;
                         co.line = line;
                         consoleOut += co.toString();
-
+                        consoleOut += findConversionObjectInfo(co);
+                        consoleOut += LINE + Environment.NewLine;
                         conversionObjects.Add(co);
-
+                        //add to x12 combo box
                     }
                     else
                     {
@@ -1022,5 +1025,67 @@ namespace EDI_Utilities
             conversionConsoleTextBox.Text = consoleOut;
 
         }
+
+        String findConversionObjectInfo(ConversionObject co)
+        {
+            String s = "";
+            //find the segment
+            IdocSegment seg = null;
+            if (allSegments.ContainsKey(co.idocSeg))
+            {
+                seg = allSegments[co.idocSeg];
+            }
+            
+            if (seg==null)
+            {
+                String fieldInfo = "";
+                //loop through litterally everything, find the field.
+                if (conversionIntenseSearch)
+                {
+                    
+                    foreach (IdocSegment loopSeg in allSegments.Values)
+                    {
+                        String query2 = co.idocField;
+                        string result2 = intenseConversionFindField(co.idocField, loopSeg);
+                        if (result2 != "")
+                        {
+                            fieldInfo += loopSeg.name + Environment.NewLine +  result2 + Environment.NewLine;
+                        }
+
+                    }
+                }
+                
+                    return "Failed to find segment: " + co.idocSeg + Environment.NewLine + "Performed Intense Search: " + conversionIntenseSearch + Environment.NewLine + fieldInfo;
+                
+            }
+            intenseConversionFindField(co.idocField, seg);
+            s += seg + Environment.NewLine + Environment.NewLine;
+            //find the field
+            String query = co.idocField;
+
+            return s;
+        }
+
+        String intenseConversionFindField(String query,IdocSegment seg)
+        {
+            if (seg == null)
+                return "";
+            String s = "";
+            IdocField field = null;
+
+            field = seg.findField(query);
+
+            while (field == null && query.Length > SEARCH_STOP && conversionIntenseSearch == true)
+            {
+                query = query.Substring(0, query.Length - 1);
+                field = seg.findField(query);
+            }
+            if (field != null)
+            {
+                s += field.ToString() + Environment.NewLine;
+            }
+            return s;
+        }
+
     }
 }

@@ -19,14 +19,8 @@ namespace EDI_Utilities
             s += "Whole Line: " + line + Environment.NewLine;
             return s;
         }
+        //IDOC must be found through a main window method.
 
-        public String findIdocInfo()
-        {
-            String s = "idoc info not found";
-            
-
-
-            return s;
-        }
+        //in the future, datastructures should probably be in their own dataholder static class at the very least.
     }
 }

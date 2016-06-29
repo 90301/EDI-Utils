@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EDI_Utilities
 {
-    class idocField
+    class IdocField
     {
         public String name { get; set; }
         public String text { get; set; }

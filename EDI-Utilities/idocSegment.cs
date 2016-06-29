@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EDI_Utilities
 {
-    class idocSegment
+    class IdocSegment
     {
         public String name { get; set; }
         public String level { get; set; }
@@ -14,11 +14,11 @@ namespace EDI_Utilities
         public String loopMin { get; set; }
         public String loopMax { get; set; }
         //the string is the field name
-        public List<idocField> fields = new List<idocField>();
+        public List<IdocField> fields = new List<IdocField>();
 
-        public idocField getFieldInPosition(int position)
+        public IdocField getFieldInPosition(int position)
         {
-            foreach (idocField field in fields)
+            foreach (IdocField field in fields)
             {
                 if (field.charFirst <= (position+1) && field.charLast >= (position+1))
                 {
@@ -39,6 +39,18 @@ namespace EDI_Utilities
             output += "LOOP_MAX: " + loopMax + Environment.NewLine;
             output += "KNOWN FIELDS: " + fields.Count + Environment.NewLine;
             return output;
+        }
+
+        public IdocField findField(string idocField)
+        {
+            foreach (IdocField field in fields)
+            {
+                if (field.name.Contains(idocField))
+                {
+                    return field;
+                }
+            }
+            return null;
         }
     }
 }
