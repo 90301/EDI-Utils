@@ -75,6 +75,7 @@
                 <TextBox x:Name="explorerConsole" Margin="10,77,10,10" TextWrapping="Wrap" Text="explorer console" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                 <Label x:Name="label14" Content="X12 Field:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
                 <ComboBox x:Name="explorerX12ComboBox" HorizontalAlignment="Left" Margin="80,41,0,0" VerticalAlignment="Top" Width="190" SelectionChanged="explorerX12ComboBoxSelection"/>
+                <CheckBox x:Name="explorerSmartModeCheckBox" Content="Smart Mode (Pre-Alpha)" HorizontalAlignment="Left" Margin="453,46,0,0" VerticalAlignment="Top" IsChecked="{Binding explorerSmartMode, Mode=TwoWay}"/>
 
             </Grid>
         </TabItem>

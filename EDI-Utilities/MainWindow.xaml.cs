@@ -67,6 +67,8 @@ namespace EDI_Utilities
         public int conversionSkipFirstX { get; set; }
         public bool conversionHoldSegValue { get; set; }
         public bool conversionIntenseSearch { get; set;  }
+        public bool explorerSmartMode { get; set; }
+
 
         public MainWindow()
         {
@@ -1059,11 +1061,19 @@ namespace EDI_Utilities
                     
                     foreach (IdocSegment loopSeg in allSegments.Values)
                     {
+                        explorerPurgeSection = true;
+
                         String query2 = co.idocField;
                         string result2 = intenseConversionFindField(co.idocField, loopSeg);
                         if (result2 != "")
                         {
-                            fieldInfo += loopSeg.name + Environment.NewLine +  result2 + Environment.NewLine;
+                            //smart mode
+                            //only output if something flips the purge section
+                            
+                            if (!explorerPurgeSection || !explorerSmartMode)
+                            {
+                                fieldInfo += loopSeg.name + Environment.NewLine + result2 + Environment.NewLine;
+                            }
                         }
 
                     }
@@ -1101,19 +1111,35 @@ namespace EDI_Utilities
             }
             return s;
         }
-
+        bool explorerPurgeSection = false;
         public String findRelevantFields(String segmentName, int startPos,int endPos)
         {
             String s = "Results for: " + segmentName + " start: " + startPos + " end: " + endPos + Environment.NewLine;
+            int instance = 0;
             foreach (String line in sourceLines)
             {
                 if (line.Contains(segmentName))
                 {
+                    instance++;
                     //go to that position in the line
                     try
                     {
                         String data = line.Substring(startPos, endPos - startPos);
-                        s += data + Environment.NewLine;
+                        data = removeSpaces(data);
+                        if (data!=""&&data!=" ")
+                        {
+                            //run this through the field finder
+                            s += instance + " : " + data + Environment.NewLine;
+                            String result = "";
+                            while (!(result=findString(data)).Contains(NO_RESULTS_FOUND))
+                            {
+                                s += L2 + result + Environment.NewLine;
+                                explorerPurgeSection = false;
+                            }
+                            
+                        }
+
+                        
                     } catch
                     {
                         s += "Error: " + segmentName;
@@ -1126,8 +1152,25 @@ namespace EDI_Utilities
             return s;
         }
 
+        public readonly String L2 = "-_-_-_-_-_-_-_-_-_-_-_-_-_-_" + Environment.NewLine;
+        public readonly String L3 = "       >";
+        /// <summary>
+        /// Removes two or more spaces.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static String removeSpaces(String input)
+        {
+            Regex rgx = new Regex("[ ]{2,}");
+            String delimitedText = "";
+            delimitedText = rgx.Replace(input, "");
+            return delimitedText;
+        }
+
         private void explorerX12ComboBoxSelection(object sender, SelectionChangedEventArgs e)
         {
+            if (explorerX12ComboBox.SelectedItem == null)
+                return;
 
             String coName = explorerX12ComboBox.SelectedItem.ToString();
             String consoleInfo = "";
