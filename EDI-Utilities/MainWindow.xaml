@@ -72,9 +72,9 @@
                 <ComboBox x:Name="IdocExplorerFieldComboBox" Margin="323,10,115,0" VerticalAlignment="Top" IsReadOnly="True"/>
                 <Label x:Name="label8" Content="Segment: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 <Label x:Name="label9" Content="Field: " Margin="275,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="43"/>
-                <TextBox x:Name="IdocExplorerConsole" Margin="10,77,10,10" TextWrapping="Wrap" Text="[No functionality Yet]" AcceptsReturn="True"/>
+                <TextBox x:Name="explorerConsole" Margin="10,77,10,10" TextWrapping="Wrap" Text="explorer console" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                 <Label x:Name="label14" Content="X12 Field:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-                <ComboBox x:Name="explorerX12ComboBox" HorizontalAlignment="Left" Margin="80,41,0,0" VerticalAlignment="Top" Width="190"/>
+                <ComboBox x:Name="explorerX12ComboBox" HorizontalAlignment="Left" Margin="80,41,0,0" VerticalAlignment="Top" Width="190" SelectionChanged="explorerX12ComboBoxSelection"/>
 
             </Grid>
         </TabItem>

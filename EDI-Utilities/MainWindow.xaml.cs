@@ -1101,5 +1101,28 @@ namespace EDI_Utilities
             return s;
         }
 
+        private void explorerX12ComboBoxSelection(object sender, SelectionChangedEventArgs e)
+        {
+
+            String coName = explorerX12ComboBox.SelectedItem.ToString();
+            String consoleInfo = "";
+            //do a search, print it to the explorer console.
+
+            //get conversion object
+            if (!coList.ContainsKey(coName)) {
+                consoleInfo = "No such x12 field: " + coName;
+                explorerConsole.Text = consoleInfo;
+                return;
+            }
+
+            ConversionObject co = coList[explorerX12ComboBox.SelectedItem.ToString()];
+
+            String coInfo = findConversionObjectInfo(co);
+            consoleInfo += "X12 Field: " + coName + Environment.NewLine;
+            consoleInfo += LINE + Environment.NewLine + co + Environment.NewLine;
+            consoleInfo += LINE + Environment.NewLine + coInfo + Environment.NewLine;
+
+            explorerConsole.Text = consoleInfo;
+        }
     }
 }

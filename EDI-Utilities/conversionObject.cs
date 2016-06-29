@@ -20,7 +20,10 @@ namespace EDI_Utilities
             return s;
         }
         //IDOC must be found through a main window method.
-
+        public override string ToString()
+        {
+            return toString();
+        }
         //in the future, datastructures should probably be in their own dataholder static class at the very least.
     }
 }
