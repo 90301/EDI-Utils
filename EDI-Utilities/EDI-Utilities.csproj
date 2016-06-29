@@ -115,6 +115,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ConversionObject.cs" />
     <Compile Include="idocSegment.cs" />
     <Compile Include="idocField.cs" />
     <Compile Include="MainWindow.xaml.cs">

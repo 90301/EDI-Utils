@@ -60,6 +60,13 @@ namespace EDI_Utilities
 
         //data bound elements
         public bool fallbackSearchEnabled { get; set; }
+        public string conversionDelimiter { get; set; }
+        public int conversionIdocFieldCol { get; set; }
+        public int conversionIdocSegmentCol { get; set; }
+        public int conversionX12Col { get; set; }
+        public int conversionSkipFirstX { get; set; }
+        public bool conversionHoldSegValue { get; set; }
+
 
         public MainWindow()
         {
@@ -490,7 +497,7 @@ namespace EDI_Utilities
             sourceLines.Clear();
             delimitedLines.Clear();
 
-            String[] lines = workingText.Split(new string[] { Environment.NewLine, "\r\n", "\n" }, StringSplitOptions.None);
+            String[] lines = workingText.Split(NEW_LINE_SPLIT, StringSplitOptions.None);
 
             foreach (String line in lines)
             {
@@ -844,6 +851,8 @@ namespace EDI_Utilities
 
         //preprocess, get each line's segment name?
         Dictionary<String, idocSegment> allSegments = new Dictionary<string, idocSegment>();
+        public readonly String[] NEW_LINE_SPLIT = new string[] { Environment.NewLine, "\r\n", "\n" };
+
         public static List<List<String>> toTrueDelimitedIdoc(String idocIn)
         {
             //TODO add this.
@@ -927,6 +936,91 @@ namespace EDI_Utilities
             }
             //process x12 format
             processExpected();
+        }
+
+        private void testDataBindingClick(object sender, RoutedEventArgs e)
+        {
+            System.Console.WriteLine("Data bindings: Delimiter: " + conversionDelimiter + " seg col: " + conversionIdocSegmentCol);
+
+            processConversion();
+
+        }
+
+        private void uploadConversionButtonClick(object sender, RoutedEventArgs e)
+        {
+            //open dialog box
+            conversionSourceTextBox.Text = dialogUpload();
+            if (conversionSourceTextBox.Text != "")
+            {
+                loaderConversionStatusLabel.Content = "Conversion Loaded.";
+            }
+            //process conversion format
+            processConversion();
+        }
+        List<ConversionObject> conversionObjects = new List<ConversionObject>();
+        /// <summary>
+        /// Go through the csv, looking for essential fields
+        /// populate objects based on the lines
+        /// goal is to have two maps (x12 sorted and Idoc sorted)
+        /// </summary>
+        private void processConversion()
+        {
+            //convert to lines
+            String[] lines = conversionSourceTextBox.Text.Split(NEW_LINE_SPLIT,StringSplitOptions.RemoveEmptyEntries);
+
+            String consoleOut = "";
+
+            String currentSegment = "";
+            int i = 0;
+            foreach(String line in lines)
+            {
+                i++;
+                if (i < conversionSkipFirstX)
+                {
+
+                } else {
+                    //divide it into fields
+                    String[] fields = line.Split(new String[] { conversionDelimiter }, StringSplitOptions.None);
+
+                    String X12Value = fields[conversionX12Col];
+                    if (X12Value != "")
+                    {
+
+                        String idocField = fields[conversionIdocFieldCol];
+                        String idocSeg = currentSegment;
+                        if (!conversionHoldSegValue)
+                        {
+                            idocSeg = fields[conversionIdocSegmentCol];
+                        }
+                        //create a conversion object and store it
+                        ConversionObject co = new ConversionObject();
+                        co.x12 = X12Value;
+                        co.idocField = idocField;
+                        co.idocSeg = idocSeg;
+                        co.line = line;
+                        consoleOut += co.toString();
+
+                        conversionObjects.Add(co);
+
+                    }
+                    else
+                    {
+                        if (conversionHoldSegValue)
+                        {
+                            //check to see if the Idoc segment is in the correct location
+                            String seg = fields[conversionIdocSegmentCol];
+                            if (seg != "")
+                            {
+                                currentSegment = seg;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            conversionConsoleTextBox.Text = consoleOut;
+
         }
     }
 }

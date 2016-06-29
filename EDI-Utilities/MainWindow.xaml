@@ -77,7 +77,27 @@
             </Grid>
         </TabItem>
         <TabItem Header="Conversion CSV">
-            <Grid></Grid>
+            <Grid>
+                <Label x:Name="label11" Content="delimiter:" HorizontalAlignment="Left" Margin="10,13,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="conversionDelimiterTextbox" HorizontalAlignment="Left" Height="23" Margin="169,13,0,0" TextWrapping="Wrap" 
+                         Text="{Binding conversionDelimiter, FallbackValue=',',  Mode=TwoWay}" VerticalAlignment="Top" Width="40"/>
+                <Label x:Name="label12" Content="Idoc Field Column: " HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="conversionIdocFieldColTextbox" HorizontalAlignment="Left" Height="23" Margin="169,69,0,0" TextWrapping="Wrap" 
+                         Text="{Binding conversionIdocFieldCol, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40"/>
+                <Label x:Name="label12_Copy" Content="Idoc Segment Column: " HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="conversionIdocSegmentColTextbox" HorizontalAlignment="Left" Height="23" Margin="169,41,0,0" TextWrapping="Wrap" 
+                         Text="{Binding conversionIdocSegmentCol, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40"/>
+                <Label x:Name="label12_Copy1" Content="X12 Field Column: " HorizontalAlignment="Left" Margin="10,97,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="conversionX12ColTextbox" HorizontalAlignment="Left" Height="23" Margin="169,97,0,0" TextWrapping="Wrap" 
+                         Text="{Binding conversionX12Col, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40"/>
+                <CheckBox x:Name="conversionHoldSegmentCheckBox" Content="Hold Segment Value" HorizontalAlignment="Left" Margin="214,41,0,0" VerticalAlignment="Top" IsChecked="{Binding conversionHoldSegValue}"/>
+                <Label x:Name="label13" Content="Skip First X rows: " HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="conversionSkipFirstXRowsTextbox" HorizontalAlignment="Left" Height="23" Margin="169,125,0,0" TextWrapping="Wrap" 
+                         Text="{Binding conversionSkipFirstX, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40" UndoLimit="99"/>
+                <Button x:Name="conversionTestBtn" Content="Test Field Location" HorizontalAlignment="Left" Margin="10,153,0,0" VerticalAlignment="Top" Width="199" Click="testDataBindingClick"/>
+                <TextBox x:Name="conversionSourceTextBox" Margin="10,181,429,10" TextWrapping="Wrap" Text="Conversion Source"/>
+                <TextBox x:Name="conversionConsoleTextBox" Margin="214,181,10,10" TextWrapping="Wrap" Text="Conversion Console"/>
+            </Grid>
         </TabItem>
         <TabItem Header="File Loader">
             <Grid>
@@ -93,7 +113,7 @@
                 <Label x:Name="loaderIdocFormatStatusLabel" Content="idoc format status" HorizontalAlignment="Left" Margin="206,72,0,0" VerticalAlignment="Top"/>
                 <Button x:Name="uploadX12Button" Content="Upload" HorizontalAlignment="Left" Margin="126,103,0,0" VerticalAlignment="Top" Width="75" Click="uploadX12ButtonClick"/>
                 <Label x:Name="loaderX12StatusLabel" Content="x12 status" HorizontalAlignment="Left" Margin="206,103,0,0" VerticalAlignment="Top"/>
-                <Button x:Name="uploadConversionButton" Content="Upload" HorizontalAlignment="Left" Margin="126,134,0,0" VerticalAlignment="Top" Width="75"/>
+                <Button x:Name="uploadConversionButton" Content="Upload" HorizontalAlignment="Left" Margin="126,134,0,0" VerticalAlignment="Top" Width="75" Click="uploadConversionButtonClick"/>
                 <Label x:Name="loaderConversionStatusLabel" Content="Conversion status" HorizontalAlignment="Left" Margin="206,134,0,0" VerticalAlignment="Top"/>
                 <Button x:Name="uploadPrefButton" Content="Upload" HorizontalAlignment="Left" Margin="126,165,0,0" VerticalAlignment="Top" Width="75"/>
                 <Label x:Name="loaderPrefStatusLabel" Content="Preference status" HorizontalAlignment="Left" Margin="206,165,0,0" VerticalAlignment="Top"/>
