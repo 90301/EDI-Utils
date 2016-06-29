@@ -1097,6 +1097,31 @@ namespace EDI_Utilities
             if (field != null)
             {
                 s += field.ToString() + Environment.NewLine;
+                s += findRelevantFields(seg.name, field.charFirst - 1, field.charLast - 1);
+            }
+            return s;
+        }
+
+        public String findRelevantFields(String segmentName, int startPos,int endPos)
+        {
+            String s = "Results for: " + segmentName + " start: " + startPos + " end: " + endPos + Environment.NewLine;
+            foreach (String line in sourceLines)
+            {
+                if (line.Contains(segmentName))
+                {
+                    //go to that position in the line
+                    try
+                    {
+                        String data = line.Substring(startPos, endPos - startPos);
+                        s += data + Environment.NewLine;
+                    } catch
+                    {
+                        s += "Error: " + segmentName;
+                        //ignore that result
+                    }
+                    //To get full info on field, use the field finder!
+                    //TODO: do this automatically.
+                }
             }
             return s;
         }
@@ -1120,8 +1145,7 @@ namespace EDI_Utilities
             String coInfo = findConversionObjectInfo(co);
             consoleInfo += "X12 Field: " + coName + Environment.NewLine;
             consoleInfo += LINE + Environment.NewLine + co + Environment.NewLine;
-            consoleInfo += LINE + Environment.NewLine + coInfo + Environment.NewLine;
-
+            consoleInfo += LINE + Environment.NewLine + coInfo + Environment.NewLine + LINE;
             explorerConsole.Text = consoleInfo;
         }
     }
