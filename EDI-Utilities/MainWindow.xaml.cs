@@ -55,8 +55,53 @@ namespace EDI_Utilities
         List<List<String>> allExpectedFields = new List<List<String>>();
         List<List<String>> usefulExpectedFields = new List<List<String>>();
 
+        //Idoc processing variables
+        private List<String> formatLines;
+        //IDOC constants
+        //starting
+        public const String IDOC_BEGIN_SEGMENT_SECTION = "BEGIN_SEGMENT_SECTION";//starts a document [ignore?]
+        public const String IDOC_BEGIN_SEGMENT = "BEGIN_SEGMENT";//value is the field name
+        public const String IDOC_BEGIN_IDOC = "BEGIN_IDOC";
+        public const String IDOC_BEGIN_FIELDS = "BEGIN_FIELDS";
+        //public const String IDOC_ = "";
+
+        //SEGMENT
+        public const String IDOC_SEG_STATUS = "STATUS";
+        public const String IDOC_SEG_TYPE = "TYPE";
+        public const String IDOC_SEG_LEVEL = "LEVEL";
+        public const String IDOC_SEG_LOOPMIN = "LOOPMIN";
+        public const String IDOC_SEG_LOOPMAX = "LOOPMAX";
+        //FIELDS
+        public const String IDOC_NAME = "NAME";
+        public const String IDOC_TEXT = "TEXT";
+        public const String IDOC_TYPE = "TYPE";
+        public const String IDOC_FIELD_POS = "FIELD_POS";
+        public const String IDOC_LENGTH = "LENGTH";
+        public const String IDOC_CHARACTER_FIRST = "CHARACTER_FIRST";
+        public const String IDOC_CHARACTER_LAST = "CHARACTER_LAST";
+        //ending
+        public const String IDOC_END_SEGMENT = "END_SEGMENT";
+        public const String IDOC_END_FIELDS = "END_FIELDS";
+        public const String IDOC_END_IDOC = "END_IDOC";
+        public const String IDOC_END_SEGMENT_SECTION = "END_SEGMENT_SECTION";
+        private static readonly int IDOC_FIELD_LENGTH = 20;
+        public String idocName;
+        private IdocField workingField;
+        private IdocSegment workingSegment;
+        List<IdocSegment> idocSegments = new List<IdocSegment>();//holds all the loaded idoc segments
+        private String workingSourceFormatText;
+        private bool IdocLoaded = false;
+        private bool idocFieldFound = false;
+        
+        
+        //conversion csv
+        SortedList<String, ConversionObject> coList = new SortedList<string, ConversionObject>();
+        Dictionary<String, ConversionObject> coDict = new Dictionary<string, ConversionObject>();
+
         //constants
         public const string LINE = "-------------------------";
+        public readonly String L2 = "-_-_-_-_-_-_-_-_-_-_-_-_-_-_" + Environment.NewLine;
+        public readonly String L3 = "       >";
 
         //data bound elements
         public bool fallbackSearchEnabled { get; set; }
@@ -490,6 +535,19 @@ namespace EDI_Utilities
  */
 
         /// <summary>
+        /// Removes two or more spaces.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static String removeSpaces(String input)
+        {
+            Regex rgx = new Regex("[ ]{2,}");
+            String delimitedText = "";
+            delimitedText = rgx.Replace(input, "");
+            return delimitedText;
+        }
+
+        /// <summary>
         /// parses the source text into individual lines.
         /// fills both the source lines and delimited lines.
         /// </summary>
@@ -645,42 +703,7 @@ namespace EDI_Utilities
 
         }
 
-        private List<String> formatLines;
-        //IDOC constants
-        //starting
-        public const String IDOC_BEGIN_SEGMENT_SECTION = "BEGIN_SEGMENT_SECTION";//starts a document [ignore?]
-        public const String IDOC_BEGIN_SEGMENT = "BEGIN_SEGMENT";//value is the field name
-        public const String IDOC_BEGIN_IDOC = "BEGIN_IDOC";
-        public const String IDOC_BEGIN_FIELDS = "BEGIN_FIELDS";
-        //public const String IDOC_ = "";
 
-        //SEGMENT
-        public const String IDOC_SEG_STATUS = "STATUS";
-        public const String IDOC_SEG_TYPE = "TYPE";
-        public const String IDOC_SEG_LEVEL = "LEVEL";
-        public const String IDOC_SEG_LOOPMIN = "LOOPMIN";
-        public const String IDOC_SEG_LOOPMAX = "LOOPMAX";
-        //FIELDS
-        public const String IDOC_NAME = "NAME";
-        public const String IDOC_TEXT = "TEXT";
-        public const String IDOC_TYPE = "TYPE";
-        public const String IDOC_FIELD_POS = "FIELD_POS";
-        public const String IDOC_LENGTH = "LENGTH";
-        public const String IDOC_CHARACTER_FIRST = "CHARACTER_FIRST";
-        public const String IDOC_CHARACTER_LAST = "CHARACTER_LAST";
-        //ending
-        public const String IDOC_END_SEGMENT = "END_SEGMENT";
-        public const String IDOC_END_FIELDS = "END_FIELDS";
-        public const String IDOC_END_IDOC = "END_IDOC";
-        public const String IDOC_END_SEGMENT_SECTION = "END_SEGMENT_SECTION";
-        private static readonly int IDOC_FIELD_LENGTH = 20;
-        public String idocName;
-        private IdocField workingField;
-        private IdocSegment workingSegment;
-        List<IdocSegment> idocSegments = new List<IdocSegment>();//holds all the loaded idoc segments
-        private String workingSourceFormatText;
-        private bool IdocLoaded = false;
-        private bool idocFieldFound = false;
 
         public void processSourceFormat()
         {
@@ -861,6 +884,15 @@ namespace EDI_Utilities
             return null;
         }
 
+        /// <summary>
+        /// Gives a string output of information related to a segment
+        /// and a field in a certain position.
+        /// postion = how many characters over the item is.
+        /// 
+        /// </summary>
+        /// <param name="segName">The name of the segment</param>
+        /// <param name="position">the position of the field in the segment</param>
+        /// <returns></returns>
         public String getIdocInfo(String segName,int position)
         {
             idocFieldFound = false;
@@ -887,6 +919,22 @@ namespace EDI_Utilities
             }
             return output;
         }
+
+
+        /***
+ *    UU   UU    PPPPPP     LL          OOOOO       AAA      DDDDD      IIIII    NN   NN      GGGG  
+ *    UU   UU    PP   PP    LL         OO   OO     AAAAA     DD  DD      III     NNN  NN     GG  GG 
+ *    UU   UU    PPPPPP     LL         OO   OO    AA   AA    DD   DD     III     NN N NN    GG      
+ *    UU   UU    PP         LL         OO   OO    AAAAAAA    DD   DD     III     NN  NNN    GG   GG 
+ *     UUUUU     PP         LLLLLLL     OOOO0     AA   AA    DDDDDD     IIIII    NN   NN     GGGGGG 
+ *                                                                                                  
+ *    FFFFFFF    IIIII    LL         EEEEEEE     SSSSS                                              
+ *    FF          III     LL         EE         SS                                                  
+ *    FFFF        III     LL         EEEEE       SSSSS                                              
+ *    FF          III     LL         EE              SS                                             
+ *    FF         IIIII    LLLLLLL    EEEEEEE     SSSSS                                              
+ *                                                                                                  
+ */
 
         private void uploadIdocClick(object sender, RoutedEventArgs e)
         {
@@ -939,6 +987,24 @@ namespace EDI_Utilities
             //process x12 format
             processExpected();
         }
+
+
+        /***
+ *     CCCCC      OOOOO     NN   NN    VV     VV    EEEEEEE    RRRRRR      SSSSS     IIIII     OOOOO     NN   NN 
+ *    CC    C    OO   OO    NNN  NN    VV     VV    EE         RR   RR    SS          III     OO   OO    NNN  NN 
+ *    CC         OO   OO    NN N NN     VV   VV     EEEEE      RRRRRR      SSSSS      III     OO   OO    NN N NN 
+ *    CC    C    OO   OO    NN  NNN      VV VV      EE         RR  RR          SS     III     OO   OO    NN  NNN 
+ *     CCCCC      OOOO0     NN   NN       VVV       EEEEEEE    RR   RR     SSSSS     IIIII     OOOO0     NN   NN 
+ *                                                                                                               
+ *     CCCCC      SSSSS     VV     VV                                                                            
+ *    CC    C    SS         VV     VV                                                                            
+ *    CC          SSSSS      VV   VV                                                                             
+ *    CC    C         SS      VV VV                                                                              
+ *     CCCCC      SSSSS        VVV                                                                               
+ *                                                                                                               
+ */
+
+
 
         private void testDataBindingClick(object sender, RoutedEventArgs e)
         {
@@ -1032,8 +1098,7 @@ namespace EDI_Utilities
             //add to x12 combo box
             poplateExplorerComboBox();
         }
-        SortedList<String, ConversionObject> coList = new SortedList<string, ConversionObject>();
-        Dictionary<String, ConversionObject> coDict = new Dictionary<string, ConversionObject>();
+
         void poplateExplorerComboBox()
         {
             explorerX12ComboBox.Items.Clear();
@@ -1152,20 +1217,7 @@ namespace EDI_Utilities
             return s;
         }
 
-        public readonly String L2 = "-_-_-_-_-_-_-_-_-_-_-_-_-_-_" + Environment.NewLine;
-        public readonly String L3 = "       >";
-        /// <summary>
-        /// Removes two or more spaces.
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static String removeSpaces(String input)
-        {
-            Regex rgx = new Regex("[ ]{2,}");
-            String delimitedText = "";
-            delimitedText = rgx.Replace(input, "");
-            return delimitedText;
-        }
+
 
         private void explorerX12ComboBoxSelection(object sender, SelectionChangedEventArgs e)
         {
