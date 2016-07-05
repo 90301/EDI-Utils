@@ -98,6 +98,10 @@ namespace EDI_Utilities
         SortedList<String, ConversionObject> coList = new SortedList<string, ConversionObject>();
         Dictionary<String, ConversionObject> coDict = new Dictionary<string, ConversionObject>();
 
+        //This list only contains idoc segments with the corresponding X12 segments.
+        SortedList<String, ConversionObject> idocCoList = new SortedList<string, ConversionObject>();
+
+
         //constants
         public const string LINE = "-------------------------";
         public readonly String L2 = "-_-_-_-_-_-_-_-_-_-_-_-_-_-_" + Environment.NewLine;
@@ -116,15 +120,51 @@ namespace EDI_Utilities
         public bool explorerSmartMode { get; set; }
         public bool conversionDisjoint { get; set; }
 
+        //location of files
+        //Add this later
 
         public MainWindow()
         {
             InitializeComponent();
             this.DataContext = this;
             this.conversionDelimiter = ",";
+            loadPreferences();
         }
 
-        
+        //SAVE and LOAD preferences
+
+        public void loadPreferences()
+        {
+            //Properties.Settings.Default.Reload();
+            fallbackSearchEnabled = Properties.Settings.Default.fallbackSearchEnabled;
+            conversionDelimiter = Properties.Settings.Default.conversionDelimiter;
+            conversionIdocFieldCol = Properties.Settings.Default.conversionIdocFieldCol;
+            conversionIdocSegmentCol = Properties.Settings.Default.conversionIdocSegmentCol;
+            conversionX12Col = Properties.Settings.Default.conversionX12Col;
+            conversionSkipFirstX = Properties.Settings.Default.conversionSkipFirstX;
+            conversionDescriptionCol = Properties.Settings.Default.conversionDescriptionCol;
+            conversionHoldSegValue = Properties.Settings.Default.conversionHoldSegValue;
+            conversionIntenseSearch = Properties.Settings.Default.conversionIntenseSearch;
+            explorerSmartMode = Properties.Settings.Default.explorerSmartMode;
+            conversionDisjoint = Properties.Settings.Default.conversionDisjoint;
+
+        }
+
+        public void savePreferences()
+        {
+            Properties.Settings.Default.fallbackSearchEnabled = fallbackSearchEnabled;
+            Properties.Settings.Default.conversionDelimiter = conversionDelimiter;
+            Properties.Settings.Default.conversionIdocFieldCol = conversionIdocFieldCol;
+            Properties.Settings.Default.conversionIdocSegmentCol = conversionIdocSegmentCol;
+            Properties.Settings.Default.conversionX12Col = conversionX12Col;
+            Properties.Settings.Default.conversionSkipFirstX = conversionSkipFirstX;
+            Properties.Settings.Default.conversionDescriptionCol = conversionDescriptionCol;
+            Properties.Settings.Default.conversionHoldSegValue = conversionHoldSegValue;
+            Properties.Settings.Default.conversionIntenseSearch = conversionIntenseSearch;
+            Properties.Settings.Default.explorerSmartMode = explorerSmartMode;
+            Properties.Settings.Default.conversionDisjoint = conversionDisjoint;
+            Properties.Settings.Default.Save();
+        }
 
         /*
          *  ________________________________________________
@@ -1307,6 +1347,11 @@ namespace EDI_Utilities
             consoleInfo += LINE + Environment.NewLine + co + Environment.NewLine;
             consoleInfo += LINE + Environment.NewLine + coInfo + Environment.NewLine + LINE;
             explorerConsole.Text = consoleInfo;
+        }
+
+        private void savePreferencesButton_Click(object sender, RoutedEventArgs e)
+        {
+            savePreferences();
         }
     }
 }

@@ -125,6 +125,7 @@
                 <Label x:Name="loaderConversionStatusLabel" Content="Conversion status" HorizontalAlignment="Left" Margin="206,134,0,0" VerticalAlignment="Top"/>
                 <Button x:Name="uploadPrefButton" Content="Upload" HorizontalAlignment="Left" Margin="126,165,0,0" VerticalAlignment="Top" Width="75"/>
                 <Label x:Name="loaderPrefStatusLabel" Content="Preference status" HorizontalAlignment="Left" Margin="206,165,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="savePreferencesButton" Content="Save Preferences" HorizontalAlignment="Left" Margin="10,196,0,0" VerticalAlignment="Top" Width="305" Click="savePreferencesButton_Click"/>
 
             </Grid>
         </TabItem>

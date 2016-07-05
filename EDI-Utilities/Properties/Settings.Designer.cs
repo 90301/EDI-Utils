@@ -18,6 +18,17 @@ namespace EDI_Utilities.Properties
     {
 
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+        internal string conversionDelimiter;
+        internal int conversionDescriptionCol;
+        internal bool conversionDisjoint;
+        internal bool conversionHoldSegValue;
+        internal int conversionIdocFieldCol;
+        internal int conversionIdocSegmentCol;
+        internal bool conversionIntenseSearch;
+        internal int conversionSkipFirstX;
+        internal int conversionX12Col;
+        internal bool explorerSmartMode;
+        internal bool fallbackSearchEnabled;
 
         public static Settings Default
         {
