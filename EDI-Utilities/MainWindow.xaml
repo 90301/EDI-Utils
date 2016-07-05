@@ -93,17 +93,18 @@
                 <Label x:Name="label12_Copy1" Content="X12 Field Column: " HorizontalAlignment="Left" Margin="10,97,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="conversionX12ColTextbox" HorizontalAlignment="Left" Height="23" Margin="169,97,0,0" TextWrapping="Wrap" 
                          Text="{Binding conversionX12Col, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40"/>
-                <CheckBox x:Name="conversionHoldSegmentCheckBox" Content="Hold Segment Value" HorizontalAlignment="Left" Margin="214,41,0,0" VerticalAlignment="Top" IsChecked="{Binding conversionHoldSegValue}"/>
+                <CheckBox x:Name="conversionHoldSegmentCheckBox" Content="Hold Segment Value" HorizontalAlignment="Left" Margin="214,13,0,0" VerticalAlignment="Top" IsChecked="{Binding conversionHoldSegValue}"/>
                 <Label x:Name="label13" Content="Skip First X rows: " HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="conversionSkipFirstXRowsTextbox" HorizontalAlignment="Left" Height="23" Margin="169,125,0,0" TextWrapping="Wrap" 
                          Text="{Binding conversionSkipFirstX, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40" UndoLimit="99"/>
                 <Button x:Name="conversionTestBtn" Content="Test Field Location" HorizontalAlignment="Left" Margin="10,184,0,0" VerticalAlignment="Top" Width="199" Click="testDataBindingClick"/>
                 <TextBox x:Name="conversionSourceTextBox" Margin="10,212,0,10" TextWrapping="Wrap" Text="Conversion Source" HorizontalAlignment="Left" Width="199"/>
                 <TextBox x:Name="conversionConsoleTextBox" Margin="214,212,10,10" TextWrapping="Wrap" Text="Conversion Console"/>
-                <CheckBox x:Name="conversionIntenseSearchCheckBox" Content="Intense Search (Can be very cpu/ram intensive)" HorizontalAlignment="Left" Margin="214,187,0,0" VerticalAlignment="Top" IsChecked="{Binding conversionIntenseSearch, Mode=TwoWay}"/>
+                <CheckBox x:Name="conversionIntenseSearchCheckBox" Content="Intense Search (Can be very cpu/ram intensive)" HorizontalAlignment="Left" Margin="214,56,0,0" VerticalAlignment="Top" IsChecked="{Binding conversionIntenseSearch, Mode=TwoWay}"/>
                 <Label x:Name="label13_Copy" Content="Description field:" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="conversionDescriptonColTextbox" HorizontalAlignment="Left" Height="23" Margin="169,153,0,0" TextWrapping="Wrap" 
                 	Text="{Binding conversionDescriptionCol, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40" UndoLimit="99"/>
+                <CheckBox x:Name="conversionDisjointFieldCheckBox" Content="Disjoint Field Mode" HorizontalAlignment="Left" Margin="214,35,0,0" VerticalAlignment="Top" IsChecked="{Binding conversionDisjoint, Mode=TwoWay}"/>
             </Grid>
         </TabItem>
         <TabItem Header="File Loader">

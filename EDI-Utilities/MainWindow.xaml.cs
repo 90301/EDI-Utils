@@ -114,6 +114,7 @@ namespace EDI_Utilities
         public bool conversionHoldSegValue { get; set; }
         public bool conversionIntenseSearch { get; set;  }
         public bool explorerSmartMode { get; set; }
+        public bool conversionDisjoint { get; set; }
 
 
         public MainWindow()
@@ -1103,6 +1104,16 @@ namespace EDI_Utilities
                     {
 
                         String idocField = fields[conversionIdocFieldCol];
+                        int segFieldTest = conversionSegOffset;
+                        //look for the field
+                        while (idocField == "" && conversionDisjoint && segFieldTest < conversionDescriptionCol)
+                        {
+                            //keep searching until a segment name is found
+                            segFieldTest++;
+                            idocField = fields[segFieldTest];
+                        }
+
+
                         String idocSeg = currentSegment;
                         if (!conversionHoldSegValue)
                         {
@@ -1126,10 +1137,19 @@ namespace EDI_Utilities
                         if (conversionHoldSegValue)
                         {
                             //check to see if the Idoc segment is in the correct location
+                            
                             String seg = fields[conversionIdocSegmentCol];
                             String des = fields[conversionDescriptionCol];
+                            int segColTest = conversionDescriptionCol;
+                            while (seg=="" && conversionDisjoint && segColTest < conversionDescriptionCol)
+                            {
+                                //keep searching until a segment name is found
+                                segColTest++;
+                                seg = fields[segColTest];
+                            }
                             if (seg != "" && des =="")
                             {
+                                conversionSegOffset = segColTest;
                                 currentSegment = seg;
                             }
                         }
@@ -1142,6 +1162,7 @@ namespace EDI_Utilities
             //add to x12 combo box
             poplateExplorerComboBox();
         }
+        int conversionSegOffset = 0;
 
         void poplateExplorerComboBox()
         {
