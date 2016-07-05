@@ -110,6 +110,7 @@ namespace EDI_Utilities
         public int conversionIdocSegmentCol { get; set; }
         public int conversionX12Col { get; set; }
         public int conversionSkipFirstX { get; set; }
+        public int conversionDescriptionCol { get; set; }
         public bool conversionHoldSegValue { get; set; }
         public bool conversionIntenseSearch { get; set;  }
         public bool explorerSmartMode { get; set; }
@@ -119,6 +120,7 @@ namespace EDI_Utilities
         {
             InitializeComponent();
             this.DataContext = this;
+            this.conversionDelimiter = ",";
         }
 
         
@@ -636,6 +638,12 @@ namespace EDI_Utilities
 
             return null;
         }
+        //________________________[P0401] [P0402] [P0403]...
+        //----------------------------V----V------V
+        //<Field Name [PO1]>, Values["DD","S1","29201"]
+        Dictionary<String, List<String>> x12Segments = new Dictionary<string, List<string>>();
+
+
         /// <summary>
         /// Process information from the "expected format"
         /// [X12] or delimited information is expected to be
@@ -645,7 +653,12 @@ namespace EDI_Utilities
         /// </summary>
         public void processExpected()
         {
+            //clear previous values
+            x12Segments.Clear();
+
+            //create a working copy of the text in the textbox
             String workingText = expectedTextBox.Text;
+            //set up the delimiter
             expectedDelimiter = expectedDelimiterTextBox.Text;
             //purge all instances of EOL delimiter
             String eolDelimiter = expectedEOLDelimiterTextBox.Text;
@@ -669,7 +682,7 @@ namespace EDI_Utilities
 
                 List<String> usefulFields = new List<string>();
                 List<String> allFields = new List<string>();
-
+                
 
                 String[] fieldsUseful = line.Split(new string[] { expectedDelimiter }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (String field in fieldsUseful)
@@ -682,10 +695,23 @@ namespace EDI_Utilities
                 }
 
                 String[] fieldsAll = line.Split(new string[] { expectedDelimiter }, StringSplitOptions.None);
+                String segmentName = "";
+
                 foreach (String field in fieldsAll)
                 {
+                    //Get the first field (segment name)
+                    if (segmentName=="")
+                    {
+
+                        segmentName = field;
+                    }
+
+
+                    //Add all fields
                     allFields.Add(field);
                 }
+
+                x12Segments.Add(segmentName, allFields);
 
                 allExpectedFields.Add(allFields);
                 usefulExpectedFields.Add(usefulFields);
@@ -725,6 +751,12 @@ namespace EDI_Utilities
 
         }
 
+        /// <summary>
+        /// Categorizes the line of an idoc data file
+        /// acts on the information presented.
+        /// This expects certain key words, and may break if expectations are not met. 
+        /// </summary>
+        /// <param name="line"></param>
         private void processIdocFormatLine(string line)
         {
             //the method can simply return if the format is skippable
@@ -736,7 +768,8 @@ namespace EDI_Utilities
                 //too few fields
                 return;
             }
-
+            //The first value is the idoc information (ex. begin segment)
+            //this determines what to do with the data that follows it.
             String key = delimited[0];
 
             String value;
@@ -878,6 +911,16 @@ namespace EDI_Utilities
         Dictionary<String, IdocSegment> allSegments = new Dictionary<string, IdocSegment>();
         public readonly String[] NEW_LINE_SPLIT = new string[] { Environment.NewLine, "\r\n", "\n" };
 
+        /// <summary>
+        /// The purpose of this function is to split the idoc input by the idoc specification into
+        /// a list of fields and segments.
+        /// this may be difficult because the idoc specification does not take into account all the data in a file, and may have gaps.
+        /// 
+        /// Looping through the idoc specification can leave holes, but may be the best way to do this.
+        /// 
+        /// </summary>
+        /// <param name="idocIn"></param>
+        /// <returns></returns>
         public static List<List<String>> toTrueDelimitedIdoc(String idocIn)
         {
             //TODO add this.
@@ -1084,7 +1127,8 @@ namespace EDI_Utilities
                         {
                             //check to see if the Idoc segment is in the correct location
                             String seg = fields[conversionIdocSegmentCol];
-                            if (seg != "")
+                            String des = fields[conversionDescriptionCol];
+                            if (seg != "" && des =="")
                             {
                                 currentSegment = seg;
                             }

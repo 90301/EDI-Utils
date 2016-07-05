@@ -97,10 +97,13 @@
                 <Label x:Name="label13" Content="Skip First X rows: " HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="conversionSkipFirstXRowsTextbox" HorizontalAlignment="Left" Height="23" Margin="169,125,0,0" TextWrapping="Wrap" 
                          Text="{Binding conversionSkipFirstX, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40" UndoLimit="99"/>
-                <Button x:Name="conversionTestBtn" Content="Test Field Location" HorizontalAlignment="Left" Margin="10,153,0,0" VerticalAlignment="Top" Width="199" Click="testDataBindingClick"/>
-                <TextBox x:Name="conversionSourceTextBox" Margin="10,181,0,10" TextWrapping="Wrap" Text="Conversion Source" HorizontalAlignment="Left" Width="199"/>
-                <TextBox x:Name="conversionConsoleTextBox" Margin="214,181,10,10" TextWrapping="Wrap" Text="Conversion Console"/>
-                <CheckBox x:Name="conversionIntenseSearchCheckBox" Content="Intense Search (Can be very cpu/ram intensive)" HorizontalAlignment="Left" Margin="214,156,0,0" VerticalAlignment="Top" IsChecked="{Binding conversionIntenseSearch, Mode=TwoWay}"/>
+                <Button x:Name="conversionTestBtn" Content="Test Field Location" HorizontalAlignment="Left" Margin="10,184,0,0" VerticalAlignment="Top" Width="199" Click="testDataBindingClick"/>
+                <TextBox x:Name="conversionSourceTextBox" Margin="10,212,0,10" TextWrapping="Wrap" Text="Conversion Source" HorizontalAlignment="Left" Width="199"/>
+                <TextBox x:Name="conversionConsoleTextBox" Margin="214,212,10,10" TextWrapping="Wrap" Text="Conversion Console"/>
+                <CheckBox x:Name="conversionIntenseSearchCheckBox" Content="Intense Search (Can be very cpu/ram intensive)" HorizontalAlignment="Left" Margin="214,187,0,0" VerticalAlignment="Top" IsChecked="{Binding conversionIntenseSearch, Mode=TwoWay}"/>
+                <Label x:Name="label13_Copy" Content="Description field:" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="conversionDescriptonColTextbox" HorizontalAlignment="Left" Height="23" Margin="169,153,0,0" TextWrapping="Wrap" 
+                	Text="{Binding conversionDescriptionCol, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40" UndoLimit="99"/>
             </Grid>
         </TabItem>
         <TabItem Header="File Loader">
