@@ -68,8 +68,8 @@
         </TabItem>
         <TabItem Header="Idoc Explorer">
             <Grid>
-                <ComboBox x:Name="IdocExplorerSegmentComboBox" Margin="80,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="190" IsReadOnly="True"/>
-                <ComboBox x:Name="IdocExplorerFieldComboBox" Margin="323,10,115,0" VerticalAlignment="Top" IsReadOnly="True"/>
+                <ComboBox x:Name="IdocExplorerSegmentComboBox" Margin="80,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="190" IsReadOnly="True" SelectionChanged="IdocExplorerSegmentComboBox_SelectionChanged"/>
+                <ComboBox x:Name="IdocExplorerFieldComboBox" Margin="323,10,115,0" VerticalAlignment="Top" IsReadOnly="True" SelectionChanged="IdocExplorerFieldComboBox_SelectionChanged"/>
                 <Label x:Name="label8" Content="Segment: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 <Label x:Name="label9" Content="Field: " Margin="275,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="43"/>
                 <TextBox x:Name="explorerConsole" Margin="10,77,10,10" TextWrapping="Wrap" Text="explorer console" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>

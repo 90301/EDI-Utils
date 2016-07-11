@@ -99,7 +99,9 @@ namespace EDI_Utilities
         Dictionary<String, ConversionObject> coDict = new Dictionary<string, ConversionObject>();
 
         //This list only contains idoc segments with the corresponding X12 segments.
-        SortedList<String, ConversionObject> idocCoList = new SortedList<string, ConversionObject>();
+        //first key is the segment
+        //2nd key is the field
+        SortedList<String, SortedList<String, ConversionObject>> idocCoList = new SortedList<string, SortedList<string, ConversionObject>>();
 
 
         //constants
@@ -120,6 +122,10 @@ namespace EDI_Utilities
         public bool explorerSmartMode { get; set; }
         public bool conversionDisjoint { get; set; }
 
+        public String idocUploadStatusString { get; set; }
+        public String idocFormatUploadStatusString { get; set; }
+        public String x12UploadStatusString { get; set; }
+        public String conversionCsvUploadStatusString { get; set; }
         //location of files
         //Add this later
 
@@ -129,6 +135,10 @@ namespace EDI_Utilities
             this.DataContext = this;
             this.conversionDelimiter = ",";
             loadPreferences();
+            idocUploadStatusString = "not loaded";
+            idocFormatUploadStatusString = "no idoc format";
+            x12UploadStatusString = "no x12 uploaded";
+            conversionCsvUploadStatusString = "no conversion csv uploaded.";
         }
 
         //SAVE and LOAD preferences
@@ -1171,6 +1181,11 @@ namespace EDI_Utilities
                         conversionObjects.Add(co);
                         coDict[co.x12]= co;
                         coList[co.x12]= co;
+                        if (!idocCoList.ContainsKey(co.idocSeg))
+                        {
+                            idocCoList.Add(co.idocSeg, new SortedList<string, ConversionObject>());
+                        }
+                        idocCoList[co.idocSeg][co.idocField] = co;
                     }
                     else
                     {
@@ -1180,7 +1195,7 @@ namespace EDI_Utilities
                             
                             String seg = fields[conversionIdocSegmentCol];
                             String des = fields[conversionDescriptionCol];
-                            int segColTest = conversionDescriptionCol;
+                            int segColTest = conversionIdocSegmentCol;
                             while (seg=="" && conversionDisjoint && segColTest < conversionDescriptionCol)
                             {
                                 //keep searching until a segment name is found
@@ -1207,11 +1222,42 @@ namespace EDI_Utilities
         void poplateExplorerComboBox()
         {
             explorerX12ComboBox.Items.Clear();
+            IdocExplorerFieldComboBox.Items.Clear();
             foreach (String coX12 in coList.Keys)
             {
                 explorerX12ComboBox.Items.Add(coX12);
             }
+            foreach (String idocSegName in idocCoList.Keys)
+            {
+                IdocExplorerSegmentComboBox.Items.Add(idocSegName);
+            }
+            
+
         }
+
+        void populateExplorerFieldComboBox()
+        {
+            IdocExplorerFieldComboBox.Items.Clear();
+
+            if (IdocExplorerSegmentComboBox.SelectedItem!=null)
+            {
+                String idocSeg = (String) IdocExplorerSegmentComboBox.SelectedItem;
+                //try to find the idoc segment in the dictionary
+                if (idocCoList[idocSeg]!=null)
+                {
+                    //populate the list
+                    foreach (String idocFieldName in idocCoList[idocSeg].Keys)
+                    {
+                        IdocExplorerFieldComboBox.Items.Add(idocFieldName);
+                    }
+                }
+
+            } else
+            {
+                return;
+            }
+        }
+
         String findConversionObjectInfo(ConversionObject co)
         {
             String s = "";
@@ -1249,7 +1295,7 @@ namespace EDI_Utilities
                     }
                 }
                 
-                    return "Failed to find segment: " + co.idocSeg + Environment.NewLine + "Performed Intense Search: " + conversionIntenseSearch + Environment.NewLine + fieldInfo;
+                    return "no exact match for segment: " + co.idocSeg + Environment.NewLine + "Performed Intense Search (similar matches): " + conversionIntenseSearch + Environment.NewLine + fieldInfo;
                 
             }
             intenseConversionFindField(co.idocField, seg);
@@ -1352,6 +1398,36 @@ namespace EDI_Utilities
         private void savePreferencesButton_Click(object sender, RoutedEventArgs e)
         {
             savePreferences();
+        }
+
+        private void IdocExplorerSegmentComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            populateExplorerFieldComboBox();
+        }
+
+        private void IdocExplorerFieldComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IdocExplorerSegmentComboBox.SelectedItem !=null)
+            {
+                if (IdocExplorerFieldComboBox.SelectedItem!=null)
+                {
+                    String idocSegName = (String)IdocExplorerSegmentComboBox.SelectedItem;
+                    String idocFieldName = (String)IdocExplorerFieldComboBox.SelectedItem;
+                    ConversionObject co;
+                    if ((co = idocCoList[idocSegName][idocFieldName]) != null)
+                    {
+
+                        String coInfo = findConversionObjectInfo(co);
+
+                        String consoleInfo = "";
+                        //populate the info with the information
+                        consoleInfo += co.toString() + Environment.NewLine + LINE + Environment.NewLine;
+                        consoleInfo += coInfo + Environment.NewLine;
+                        explorerConsole.Text = consoleInfo;
+                    }
+                }
+            }
+            
         }
     }
 }
