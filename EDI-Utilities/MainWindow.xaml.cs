@@ -1569,6 +1569,7 @@ namespace EDI_Utilities
 
         private void populateViewerComboBox()
         {
+            
             //clear out old values
             viewerFieldComboBox.Items.Clear();
             //determine selected segment
@@ -1584,8 +1585,47 @@ namespace EDI_Utilities
                     viewerFieldComboBox.Items.Add(field);
                 }
 
+                viewerFieldComboBox.SelectedIndex = 0;
+            }
+        }
+
+        private void viewerFieldComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            provideViewerInfo();
+        }
+
+        private void provideViewerInfo()
+        {
+            String consoleText = "";
+
+            String selectedSegment = (String)viewerSegmentComboBox.SelectedItem;
+            if (selectedSegment != null && viewerRealLines.ContainsKey(selectedSegment) && viewerFieldComboBox.SelectedItem != null)
+            {
+                //get the actual real line
+
+                IdocRealLine rl = viewerRealLines[selectedSegment];
+
+                //using the index of the selection, find the field
+
+                int index = viewerFieldComboBox.SelectedIndex;
+
+                String fieldContent = rl.fields[index];
+
+                IdocSegment segInfo = allSegments[rl.segmentName];
+
+                IdocField field = segInfo.fields[index];
+
+                consoleText += fieldContent + Environment.NewLine;
+                consoleText += LINE + Environment.NewLine;
+                consoleText += segInfo.ToString() + Environment.NewLine;
+                consoleText += LINE + Environment.NewLine;
+                consoleText += field + Environment.NewLine;
+
 
             }
+
+
+            viewerConsole.Text = consoleText;
         }
     }
 }

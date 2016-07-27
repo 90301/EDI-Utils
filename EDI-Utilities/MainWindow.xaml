@@ -44,7 +44,7 @@
                 <Label x:Name="label1" Content="Find:" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top"/>
                 <Button x:Name="button1" Content="Next" HorizontalAlignment="Left" Margin="177,10,0,0" VerticalAlignment="Top" Width="40" Click="findNextClick"/>
                 <Label x:Name="label2" Content="Found: XXXX" HorizontalAlignment="Left" Margin="222,7,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="fieldFinderResultsTextbox" Margin="10,39,229,10" TextWrapping="Wrap" Text="Results Conosle" AcceptsReturn="True" AcceptsTab="True"/>
+                <TextBox x:Name="fieldFinderResultsTextbox" Margin="10,39,10,10" TextWrapping="Wrap" Text="Results Conosle" AcceptsReturn="True" AcceptsTab="True"/>
             </Grid>
         </TabItem>
         <TabItem x:Name="Super_Field_Finder_Tab" Header="Super Field Finder">
@@ -64,7 +64,7 @@
 
             </Grid>
         </TabItem>
-        <TabItem Header="Idoc Converter">
+        <TabItem Header="Conversion CSV Viewer">
             <Grid>
                 <ComboBox x:Name="IdocExplorerSegmentComboBox" Margin="80,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="190" IsReadOnly="True" SelectionChanged="IdocExplorerSegmentComboBox_SelectionChanged"/>
                 <ComboBox x:Name="IdocExplorerFieldComboBox" Margin="323,10,115,0" VerticalAlignment="Top" IsReadOnly="True" SelectionChanged="IdocExplorerFieldComboBox_SelectionChanged"/>
@@ -130,7 +130,7 @@
         <TabItem Header="IDOC Information Viewer">
             <Grid>
                 <ComboBox x:Name="viewerSegmentComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="viewerSegmentComboBox_SelectionChanged"/>
-                <ComboBox x:Name="viewerFieldComboBox" Margin="185,10,93,0" VerticalAlignment="Top"/>
+                <ComboBox x:Name="viewerFieldComboBox" Margin="185,10,93,0" VerticalAlignment="Top" SelectionChanged="viewerFieldComboBox_SelectionChanged"/>
                 <TextBox x:Name="viewerConsole" Margin="10,65,10,10" TextWrapping="Wrap" Text="viewer console" AcceptsReturn="True" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
                 <Button x:Name="viewerProcessButton" Content="Process" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top" Width="65" Click="viewerProcessButton_Click"/>
 
