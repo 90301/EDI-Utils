@@ -424,11 +424,18 @@ namespace EDI_Utilities
         /// </summary>
         public void sffCodeSelected()
         {
-            int index = sffSearchForCodeComboBox.SelectedIndex;
-            List<String> fields = usefulExpectedFields[index];
-
             //clear fields
             sffSearchForItemComboBox.Items.Clear();
+
+            int index = sffSearchForCodeComboBox.SelectedIndex;
+            if (index < 0 || index > usefulExpectedFields.Count)
+            {
+                return;
+            }
+
+            List<String> fields = usefulExpectedFields[index];
+
+
 
             bool firstRun = true;
             foreach (String field in fields)
@@ -501,6 +508,8 @@ namespace EDI_Utilities
         /// </summary>
         public void sffFind()
         {
+            if (sffCodeIndex < 0 || sffItemIndex < 0)
+                return;
             //update indexs
             if (!sffMutex)
             {
@@ -706,7 +715,10 @@ namespace EDI_Utilities
         {
             //clear previous values
             x12Segments.Clear();
-
+            sffSearchForCodeComboBox.Items.Clear();
+            sffSearchForItemComboBox.Items.Clear();
+            usefulExpectedFields.Clear();
+            allExpectedFields.Clear();
             //create a working copy of the text in the textbox
             String workingText = expectedTextBox.Text;
             //set up the delimiter
@@ -760,6 +772,11 @@ namespace EDI_Utilities
 
                     //Add all fields
                     allFields.Add(field);
+                }
+
+                while (x12Segments.ContainsKey(segmentName))
+                {
+                    segmentName += ".";
                 }
 
                 x12Segments.Add(segmentName, allFields);

@@ -54,7 +54,7 @@
             <Grid Margin="10,2,11,6">
                 <TextBox x:Name="expectedTextBox" Margin="10,10,10,38" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                 <Button x:Name="expectedProcessBtn" Content="Process" Margin="0,0,10,10" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="processExpected"/>
-                <TextBox x:Name="expectedDelimiterTextBox" HorizontalAlignment="Left" Margin="80,0,0,10" TextWrapping="Wrap" Text="*" Width="34" Height="23" VerticalAlignment="Bottom"/>
+                <TextBox x:Name="expectedDelimiterTextBox" HorizontalAlignment="Left" Margin="80,0,0,10" TextWrapping="Wrap" Text="|" Width="34" Height="23" VerticalAlignment="Bottom"/>
                 <Label x:Name="label3" Content="Delimiter:" HorizontalAlignment="Left" Margin="10,0,0,8" Height="26" VerticalAlignment="Bottom"/>
                 <Label x:Name="label4" Content="End of Line:" HorizontalAlignment="Left" Margin="119,0,0,9" Height="26" VerticalAlignment="Bottom"/>
                 <TextBox x:Name="expectedEOLDelimiterTextBox" HorizontalAlignment="Left" Margin="195,0,0,10" TextWrapping="Wrap" Text="~" Width="34" Height="23" VerticalAlignment="Bottom"/>
