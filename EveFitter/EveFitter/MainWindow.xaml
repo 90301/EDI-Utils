@@ -1,0 +1,33 @@
+﻿<Window x:Class="EveFitter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EveFitter"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="420
+        " Width="525">
+    <Grid>
+        <Button x:Name="loadItemListButton" Content="Load Item List" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="100"/>
+        <Button x:Name="loadShipListButton" Content="Load Ship List" HorizontalAlignment="Left" Margin="115,10,0,0" VerticalAlignment="Top" Width="100"/>
+        <ListBox x:Name="requiredStatsListBox" HorizontalAlignment="Left" Height="180" Margin="20,105,0,0" VerticalAlignment="Top" Width="205"/>
+        <Label x:Name="label" Content="Required Stats:" HorizontalAlignment="Left" Margin="20,79,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="50,40,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="label1" Content="Stat:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label1_Copy" Content="Required Value:" HorizontalAlignment="Left" Margin="175,38,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="279,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66"/>
+        <Button x:Name="addRequirementButton" Content="Add Requirement" HorizontalAlignment="Left" Margin="360,40,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="genFitButton" Content="Generate Fit" HorizontalAlignment="Left" Margin="20,290,0,0" VerticalAlignment="Top" Width="90"/>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="227" Margin="240,86,0,0" VerticalAlignment="Top" Width="260">
+            <TabItem Header="Fit">
+                <Grid/>
+            </TabItem>
+            <TabItem Header="Console">
+                <Grid Margin="10,9,9,7">
+                    <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="175" TextWrapping="Wrap" Text="fitter console" VerticalAlignment="Top" Width="231" AcceptsReturn="True" IsReadOnlyCaretVisible="True" IsReadOnly="True"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

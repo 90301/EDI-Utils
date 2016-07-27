@@ -796,8 +796,8 @@ namespace EDI_Utilities
                 processIdocFormatLine(line);
                 
             }
-
-
+            idocFormatUploadStatusString = "Processed idoc format.";
+            
 
 
         }
@@ -832,7 +832,7 @@ namespace EDI_Utilities
             {
                 value = "";
             }
-            Console.WriteLine("key: " + key + " Value: " + value);
+            //Console.WriteLine("key: " + key + " Value: " + value);
             if (workingSegment == null)
             {
                 workingSegment = new IdocSegment();
@@ -1063,10 +1063,12 @@ namespace EDI_Utilities
             formatTextBox.Text = dialogUpload();
             if (formatTextBox.Text != "")
             {
-                loaderIdocFormatStatusLabel.Content = "IDOC Format Loaded.";
+                //loaderIdocFormatStatusLabel.Content = "IDOC Format Loaded.";
             }
             //process idoc format
+            idocFormatUploadStatusString = "Please Wait... processing.";
             processIdocFormat();
+            
 
         }
 
@@ -1428,6 +1430,162 @@ namespace EDI_Utilities
                 }
             }
             
+        }
+
+        /***
+        *    VV     VV    IIIII    EEEEEEE    WW      WW    EEEEEEE    RRRRRR  
+        *    VV     VV     III     EE         WW      WW    EE         RR   RR 
+        *     VV   VV      III     EEEEE      WW   W  WW    EEEEE      RRRRRR  
+        *      VV VV       III     EE          WW WWW WW    EE         RR  RR  
+        *       VVV       IIIII    EEEEEEE      WW   WW     EEEEEEE    RR   RR 
+        *                                                                      
+        */
+
+            //options
+        Boolean viewerUseDelimited = true;
+        Boolean viewerStartEnd = true;//use the starting end ending characters
+
+        public static String PLACEHOLDER = "[NO DATA, BEYOND END OF LINE]";
+        Dictionary<String, IdocRealLine> viewerRealLines = new Dictionary<string, IdocRealLine>();
+        List<String> viewerRealLineKeys = new List<string>(); 
+        //populate the data structure that holds everything
+        //duplicate fields are represented by [X] where X is the number of duplicates (keep incrementing until no such key exists?)
+        public void viewerProcess()
+        {
+            viewerRealLines.Clear();
+            Dictionary<String, int> segNameCounts = new Dictionary<string, int>();
+            //use parsed source lines
+            for (int i = 0; i < sourceLines.Count; i++) {
+                //get the source line and delimited line
+                //using the delimited line to get the field name.
+                String dLine = delimitedLines[i];
+                String[] dFields = dLine.Split(new String[] { sourceDelimiter }, StringSplitOptions.None);
+                String segName = dFields[0];
+                //search for the segment
+
+                // direct search (is it in the dictionary directly?)
+                IdocSegment seg = null;
+                if (allSegments.ContainsKey(segName))
+                {
+                    seg = allSegments[segName];
+                }
+
+                if (seg == null)
+                {
+                    //intense segment finding occurs here
+                    seg = findMostSimilarSegment(segName);
+                }
+                IdocRealLine realLine = new IdocRealLine();
+                realLine.segmentName = segName;
+                if (seg != null)
+                {
+                    realLine.segmentInfo = seg;
+                }
+                realLine.fullLine = sourceLines[i];
+
+                //display name
+                realLine.displaySegName = segName;
+                
+                if (segNameCounts.ContainsKey(segName))
+                {
+                    //increment the count
+                    segNameCounts[segName]++;
+                    realLine.displaySegName += "[" + segNameCounts[segName] + "]";
+                } else
+                {
+                    segNameCounts[segName] = 1;
+                }
+
+                //process the line based on the spec
+                for (int e = 0; e < seg.fields.Count; e++)
+                {
+                    IdocField field = seg.fields[e];
+                    //get position indicators (-1 makes it zero indexed)
+
+                    int start = field.charFirst -1;
+                    int end = field.charFirst + field.length -1;
+
+                    if (viewerStartEnd)
+                    {
+                        viewerConsole.Text += "Start: " + start + " End: " + end;    
+                    }
+
+                    //length check
+                    if (realLine.fullLine.Length >= end)
+                    {
+                        String fieldContent = realLine.fullLine.Substring(start , field.length);
+                        realLine.fields.Add(fieldContent);
+                    } else
+                    {
+                        //reached the end of being able to process it.
+                        //possibly break, or put a placeholder value in the list
+                        realLine.fields.Add(PLACEHOLDER);
+                    }
+
+                    //end of line proessing loop
+                }
+
+                viewerRealLines.Add(realLine.displaySegName, realLine);
+                viewerRealLineKeys.Add(realLine.displaySegName);//keeps keys in order they were read
+            }
+
+            //Check to see if we can find the segment in the idoc segments (if it's in the spec)
+
+            //put the results in the combobox
+            viewerSegmentComboBox.Items.Clear();
+            foreach (String key in viewerRealLineKeys) {
+                viewerSegmentComboBox.Items.Add(key);
+            }
+
+        }
+
+        IdocSegment findMostSimilarSegment(string segName)
+        {
+            IdocSegment bestSeg = null;
+            int mostSimilar = 100;
+            //Run the util on all pick the most similar
+            foreach (String key in allSegments.Keys)
+            {
+                int similarity = Utils.Compute(segName, key);
+                Console.WriteLine(segName + Environment.NewLine + " __--Similarity: " + similarity);
+                if (similarity < mostSimilar)
+                {
+                    bestSeg = allSegments[key];
+                    mostSimilar = similarity;
+                }
+            }
+            return bestSeg;
+        }
+
+        private void viewerProcessButton_Click(object sender, RoutedEventArgs e)
+        {
+            viewerProcess();
+        }
+
+        private void viewerSegmentComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            populateViewerComboBox();
+        }
+
+        private void populateViewerComboBox()
+        {
+            //clear out old values
+            viewerFieldComboBox.Items.Clear();
+            //determine selected segment
+            String selectedSegment = (String) viewerSegmentComboBox.SelectedItem;
+            if (selectedSegment!=null && viewerRealLines.ContainsKey(selectedSegment))
+            {
+                //get the actual real line
+
+                IdocRealLine rl = viewerRealLines[selectedSegment];
+                //fill field box with fields
+                foreach (String field in rl.fields)
+                {
+                    viewerFieldComboBox.Items.Add(field);
+                }
+
+
+            }
         }
     }
 }

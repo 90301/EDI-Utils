@@ -58,15 +58,13 @@
                 <CheckBox x:Name="sffAutoClipboardCheckBox" Content="Auto Clipboard Field Name" HorizontalAlignment="Left" Margin="10,0,0,0" Height="16" VerticalAlignment="Bottom"/>
                 <Button x:Name="sffFindNextInstanceBtn" Content="Find" Margin="0,8,75,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="57" Click="sffFindNextInstanceClick"/>
                 <CheckBox x:Name="sffSmartModeCheckBox" Content="Smart Mode" HorizontalAlignment="Left" Margin="193,0,0,0" Height="16" VerticalAlignment="Bottom" Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" ToolTip="Skips any result that does not have idoc information"/>
-                <xctk:IntegerUpDown x:Name="fallbackFirstNCharsField" Height="23" Margin="180,37,398,559" AllowTextInput="False" Watermark="Chars" Value="5" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
                 <Label x:Name="label6" Content="Alt Search   First characters:" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top"/>
-                <xctk:IntegerUpDown x:Name="fallbackLastNCharsField" Height="23" Margin="347,37,231,559" AllowTextInput="False" Watermark="Chars" Value="5" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
                 <Label x:Name="label7" Content="Last Characters:" HorizontalAlignment="Left" Margin="245,35,0,0" VerticalAlignment="Top" Foreground="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}"/>
                 <CheckBox x:Name="fallbackSearchCheckbox" Content="Fallback Search" HorizontalAlignment="Left" Margin="298,603,0,0" VerticalAlignment="Top" IsChecked="{Binding fallbackSearchEnabled, Mode=TwoWay}"/>
 
             </Grid>
         </TabItem>
-        <TabItem Header="Idoc Explorer">
+        <TabItem Header="Idoc Converter">
             <Grid>
                 <ComboBox x:Name="IdocExplorerSegmentComboBox" Margin="80,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="190" IsReadOnly="True" SelectionChanged="IdocExplorerSegmentComboBox_SelectionChanged"/>
                 <ComboBox x:Name="IdocExplorerFieldComboBox" Margin="323,10,115,0" VerticalAlignment="Top" IsReadOnly="True" SelectionChanged="IdocExplorerFieldComboBox_SelectionChanged"/>
@@ -116,16 +114,25 @@
                 <Label x:Name="label10_Copy3" Content="Preference file:" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top"/>
                 <GridSplitter x:Name="gridSplitter" HorizontalAlignment="Left" Height="100" Margin="110,150,0,0" VerticalAlignment="Top" Width="5"/>
                 <Button x:Name="uploadIdocButton" Content="Upload" HorizontalAlignment="Left" Margin="126,41,0,0" VerticalAlignment="Top" Width="75" Click="uploadIdocClick"/>
-                <Label x:Name="loaderIdocStatusLabel" Content="idoc status" HorizontalAlignment="Left" Margin="206,41,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="loaderIdocStatusLabel" Content="{Binding idocUploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,41,0,0" VerticalAlignment="Top"/>
                 <Button x:Name="uploadIdocStatusButton" Content="Upload" HorizontalAlignment="Left" Margin="126,72,0,0" VerticalAlignment="Top" Width="75" Click="uploadIdocFormatClick"/>
-                <Label x:Name="loaderIdocFormatStatusLabel" Content="idoc format status" HorizontalAlignment="Left" Margin="206,72,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="loaderIdocFormatStatusLabel" Content="{Binding idocFormatUploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,72,0,0" VerticalAlignment="Top"/>
                 <Button x:Name="uploadX12Button" Content="Upload" HorizontalAlignment="Left" Margin="126,103,0,0" VerticalAlignment="Top" Width="75" Click="uploadX12ButtonClick"/>
-                <Label x:Name="loaderX12StatusLabel" Content="x12 status" HorizontalAlignment="Left" Margin="206,103,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="loaderX12StatusLabel" Content="{Binding x12UploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,103,0,0" VerticalAlignment="Top"/>
                 <Button x:Name="uploadConversionButton" Content="Upload" HorizontalAlignment="Left" Margin="126,134,0,0" VerticalAlignment="Top" Width="75" Click="uploadConversionButtonClick"/>
-                <Label x:Name="loaderConversionStatusLabel" Content="Conversion status" HorizontalAlignment="Left" Margin="206,134,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="loaderConversionStatusLabel" Content="{Binding conversionCsvUploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,134,0,0" VerticalAlignment="Top"/>
                 <Button x:Name="uploadPrefButton" Content="Upload" HorizontalAlignment="Left" Margin="126,165,0,0" VerticalAlignment="Top" Width="75"/>
                 <Label x:Name="loaderPrefStatusLabel" Content="Preference status" HorizontalAlignment="Left" Margin="206,165,0,0" VerticalAlignment="Top"/>
                 <Button x:Name="savePreferencesButton" Content="Save Preferences" HorizontalAlignment="Left" Margin="10,196,0,0" VerticalAlignment="Top" Width="305" Click="savePreferencesButton_Click"/>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="IDOC Information Viewer">
+            <Grid>
+                <ComboBox x:Name="viewerSegmentComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="viewerSegmentComboBox_SelectionChanged"/>
+                <ComboBox x:Name="viewerFieldComboBox" Margin="185,10,93,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="viewerConsole" Margin="10,65,10,10" TextWrapping="Wrap" Text="viewer console" AcceptsReturn="True" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
+                <Button x:Name="viewerProcessButton" Content="Process" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top" Width="65" Click="viewerProcessButton_Click"/>
 
             </Grid>
         </TabItem>
