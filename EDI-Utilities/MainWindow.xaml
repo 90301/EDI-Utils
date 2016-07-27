@@ -8,6 +8,28 @@
         mc:Ignorable="d"
         Title="EDI-Utilities [by Josh Benton]" Height="700" Width="680">
     <TabControl x:Name="tabControl" Margin="10,10,14,7" RenderTransformOrigin="0.496,0.513" SelectionChanged="tabControl_SelectionChanged">
+        <TabItem Header="File Loader">
+            <Grid>
+                <Label x:Name="label10" Content="IDOC: " HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label10_Copy" Content="Idoc Format: " HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label10_Copy1" Content="X12 Format:" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label10_Copy2" Content="Conversion CSV:" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label10_Copy3" Content="Preference file:" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top"/>
+                <GridSplitter x:Name="gridSplitter" HorizontalAlignment="Left" Height="100" Margin="110,150,0,0" VerticalAlignment="Top" Width="5"/>
+                <Button x:Name="uploadIdocButton" Content="Upload" HorizontalAlignment="Left" Margin="126,41,0,0" VerticalAlignment="Top" Width="75" Click="uploadIdocClick"/>
+                <Label x:Name="loaderIdocStatusLabel" Content="{Binding idocUploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,41,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="uploadIdocStatusButton" Content="Upload" HorizontalAlignment="Left" Margin="126,72,0,0" VerticalAlignment="Top" Width="75" Click="uploadIdocFormatClick"/>
+                <Label x:Name="loaderIdocFormatStatusLabel" Content="{Binding idocFormatUploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,72,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="uploadX12Button" Content="Upload" HorizontalAlignment="Left" Margin="126,103,0,0" VerticalAlignment="Top" Width="75" Click="uploadX12ButtonClick"/>
+                <Label x:Name="loaderX12StatusLabel" Content="{Binding x12UploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,103,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="uploadConversionButton" Content="Upload" HorizontalAlignment="Left" Margin="126,134,0,0" VerticalAlignment="Top" Width="75" Click="uploadConversionButtonClick"/>
+                <Label x:Name="loaderConversionStatusLabel" Content="{Binding conversionCsvUploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,134,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="uploadPrefButton" Content="Upload" HorizontalAlignment="Left" Margin="126,165,0,0" VerticalAlignment="Top" Width="75"/>
+                <Label x:Name="loaderPrefStatusLabel" Content="Preference status" HorizontalAlignment="Left" Margin="206,165,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="savePreferencesButton" Content="Save Preferences" HorizontalAlignment="Left" Margin="10,196,0,0" VerticalAlignment="Top" Width="305" Click="savePreferencesButton_Click"/>
+
+            </Grid>
+        </TabItem>
         <TabItem Header="Source (Idoc)">
             <Grid>
                 <TextBox x:Name="sourceTextbox" Margin="10,10,10,40" Text="" MaxLength="2147483647" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" AutoWordSelection="False" AcceptsReturn="True"/>
@@ -50,8 +72,7 @@
         <TabItem x:Name="Super_Field_Finder_Tab" Header="Super Field Finder">
             <Grid Margin="0,0,0,0">
                 <ComboBox x:Name="sffSearchForCodeComboBox" HorizontalAlignment="Left" Margin="90,8,0,0" VerticalAlignment="Top" Width="60" SelectionChanged="sffCodeSelected"/>
-                <Label x:Name="label5" Content="Search For:
-                       " HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="75"/>
+                <Label x:Name="label5" Content="Search For:                        " HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="75"/>
                 <Button x:Name="sffNextButton" Content="Next" Margin="0,8,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="60" Click="sffNextClick"/>
                 <ComboBox x:Name="sffSearchForItemComboBox" Margin="155,8,137,0" VerticalAlignment="Top" SelectionChanged="sffItemSelected"/>
                 <TextBox x:Name="sffConsole" Margin="10,65,10,21" TextWrapping="Wrap" Text="Super Field Finder Console" AcceptsReturn="True"/>
@@ -81,7 +102,7 @@
             <Grid>
                 <Label x:Name="label11" Content="delimiter:" HorizontalAlignment="Left" Margin="10,13,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="conversionDelimiterTextbox" HorizontalAlignment="Left" Height="23" Margin="169,13,0,0" TextWrapping="Wrap" 
-                         Text="{Binding conversionDelimiter, FallbackValue=',',  Mode=TwoWay}" VerticalAlignment="Top" Width="40"/>
+                         Text="{Binding conversionDelimiter, FallbackValue=\,, Mode=TwoWay}" VerticalAlignment="Top" Width="40"/>
                 <Label x:Name="label12" Content="Idoc Field Column: " HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="conversionIdocFieldColTextbox" HorizontalAlignment="Left" Height="23" Margin="169,69,0,0" TextWrapping="Wrap" 
                          Text="{Binding conversionIdocFieldCol, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40"/>
@@ -103,28 +124,6 @@
                 <TextBox x:Name="conversionDescriptonColTextbox" HorizontalAlignment="Left" Height="23" Margin="169,153,0,0" TextWrapping="Wrap" 
                 	Text="{Binding conversionDescriptionCol, FallbackValue=0, Mode=TwoWay, StringFormat=\{0:D\}, TargetNullValue=0}" VerticalAlignment="Top" Width="40" UndoLimit="99"/>
                 <CheckBox x:Name="conversionDisjointFieldCheckBox" Content="Disjoint Field Mode" HorizontalAlignment="Left" Margin="214,35,0,0" VerticalAlignment="Top" IsChecked="{Binding conversionDisjoint, Mode=TwoWay}"/>
-            </Grid>
-        </TabItem>
-        <TabItem Header="File Loader">
-            <Grid>
-                <Label x:Name="label10" Content="IDOC: " HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="label10_Copy" Content="Idoc Format: " HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="label10_Copy1" Content="X12 Format:" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="label10_Copy2" Content="Conversion CSV:" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="label10_Copy3" Content="Preference file:" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top"/>
-                <GridSplitter x:Name="gridSplitter" HorizontalAlignment="Left" Height="100" Margin="110,150,0,0" VerticalAlignment="Top" Width="5"/>
-                <Button x:Name="uploadIdocButton" Content="Upload" HorizontalAlignment="Left" Margin="126,41,0,0" VerticalAlignment="Top" Width="75" Click="uploadIdocClick"/>
-                <Label x:Name="loaderIdocStatusLabel" Content="{Binding idocUploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,41,0,0" VerticalAlignment="Top"/>
-                <Button x:Name="uploadIdocStatusButton" Content="Upload" HorizontalAlignment="Left" Margin="126,72,0,0" VerticalAlignment="Top" Width="75" Click="uploadIdocFormatClick"/>
-                <Label x:Name="loaderIdocFormatStatusLabel" Content="{Binding idocFormatUploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,72,0,0" VerticalAlignment="Top"/>
-                <Button x:Name="uploadX12Button" Content="Upload" HorizontalAlignment="Left" Margin="126,103,0,0" VerticalAlignment="Top" Width="75" Click="uploadX12ButtonClick"/>
-                <Label x:Name="loaderX12StatusLabel" Content="{Binding x12UploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,103,0,0" VerticalAlignment="Top"/>
-                <Button x:Name="uploadConversionButton" Content="Upload" HorizontalAlignment="Left" Margin="126,134,0,0" VerticalAlignment="Top" Width="75" Click="uploadConversionButtonClick"/>
-                <Label x:Name="loaderConversionStatusLabel" Content="{Binding conversionCsvUploadStatusString, Mode=TwoWay}" HorizontalAlignment="Left" Margin="206,134,0,0" VerticalAlignment="Top"/>
-                <Button x:Name="uploadPrefButton" Content="Upload" HorizontalAlignment="Left" Margin="126,165,0,0" VerticalAlignment="Top" Width="75"/>
-                <Label x:Name="loaderPrefStatusLabel" Content="Preference status" HorizontalAlignment="Left" Margin="206,165,0,0" VerticalAlignment="Top"/>
-                <Button x:Name="savePreferencesButton" Content="Save Preferences" HorizontalAlignment="Left" Margin="10,196,0,0" VerticalAlignment="Top" Width="305" Click="savePreferencesButton_Click"/>
-
             </Grid>
         </TabItem>
         <TabItem Header="IDOC Information Viewer">
