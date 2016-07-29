@@ -60,7 +60,7 @@
                 <TextBox x:Name="expectedEOLDelimiterTextBox" HorizontalAlignment="Left" Margin="195,0,0,10" TextWrapping="Wrap" Text="~" Width="34" Height="23" VerticalAlignment="Bottom"/>
             </Grid>
         </TabItem>
-        <TabItem x:Name="field_finder" Header="field finder">
+        <TabItem x:Name="field_finder" Header="Field Finder">
             <Grid Margin="10,5,9,10">
                 <TextBox x:Name="findTextbox" HorizontalAlignment="Left" Height="23" Margin="52,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                 <Label x:Name="label1" Content="Find:" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top"/>

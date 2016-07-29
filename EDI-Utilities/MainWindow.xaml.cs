@@ -276,7 +276,7 @@ namespace EDI_Utilities
         /// </summary>
         /// <param name="lineNumber"></param>
         /// <returns></returns>
-        public int determineFieldNameCount(int lineNumber)
+        public int determineSegNameCount(int lineNumber)
         {
             int count = 1;
             String fieldName = parseFieldName(delimitedLines[lineNumber]);
@@ -351,11 +351,11 @@ namespace EDI_Utilities
                         finderSkips++;
                         finderLineOn = i;
                         int position = match.Index;
-                        String fieldName = parseFieldName(delimitedLine);
+                        String segName = parseFieldName(delimitedLine);
                         output += "Found : " + finderString + " [" + finderResultNumber + "]" + Environment.NewLine;
-                        output += "FieldName: " + fieldName + Environment.NewLine;
-                        output += "Occurance: " + determineFieldNameCount(i) + Environment.NewLine;
-                        output += "Field Length: " + fieldName.Length + Environment.NewLine;
+                        output += "Segment Name: " + segName + Environment.NewLine;
+                        output += "Occurrence: " + determineSegNameCount(i) + Environment.NewLine;
+                        output += "Segment Name Length: " + segName.Length + Environment.NewLine;
                         //determine position in line
                         output += "Position: " + (match.Index + 1) + Environment.NewLine;
 
@@ -364,14 +364,14 @@ namespace EDI_Utilities
                         //SET CLIPBOARD
                         if (sffAutoClipboardCheckBox.IsChecked.Value)
                         {
-                            Clipboard.SetText(fieldName);
+                            Clipboard.SetText(segName);
                         }
 
                         //IDOC INFO
                         if (IdocLoaded)
                         {
                             output += LINE + Environment.NewLine;
-                            output += getIdocInfo(fieldName, position);
+                            output += getIdocInfo(segName, position);
                         }
 
                         return output;
@@ -1168,7 +1168,11 @@ namespace EDI_Utilities
                     //divide it into fields
                     String[] fields = line.Split(new String[] { conversionDelimiter }, StringSplitOptions.None);
 
-                    String X12Value = fields[conversionX12Col];
+                    String X12Value = "";
+
+                    if (fields.Length > conversionX12Col)
+                    X12Value = fields[conversionX12Col];
+
                     if (X12Value != "")
                     {
 
@@ -1628,16 +1632,24 @@ namespace EDI_Utilities
 
                 String fieldContent = rl.fields[index];
 
-                IdocSegment segInfo = allSegments[rl.segmentName];
+                IdocSegment segInfo = rl.segmentInfo;//allSegments[rl.segmentName];
 
-                IdocField field = segInfo.fields[index];
 
+                IdocField field = null;
+
+                if (segInfo != null)
+                {
+                    field = segInfo.fields[index];
+                }
                 consoleText += fieldContent + Environment.NewLine;
-                consoleText += LINE + Environment.NewLine;
-                consoleText += segInfo.ToString() + Environment.NewLine;
-                consoleText += LINE + Environment.NewLine;
-                consoleText += field + Environment.NewLine;
 
+                if (segInfo != null)
+                {
+                    consoleText += LINE + Environment.NewLine;
+                    consoleText += segInfo.ToString() + Environment.NewLine;
+                    consoleText += LINE + Environment.NewLine;
+                    consoleText += field + Environment.NewLine;
+                }
 
             }
 
